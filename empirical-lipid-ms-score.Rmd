@@ -1,8 +1,8 @@
 ---
 title: "Examples for Empirical Lipid Point Score for Mass Spectrometry"
 output:
-  pdf_document: default
   html_document: default
+  pdf_document: default
 ---
 
 
@@ -47,30 +47,30 @@ ex_a_norm
 
 ```{r}
 ex_a_lc <- ex_a_norm[1, "Lipid.Maps.Category"]
-nominalMassPos <- scoringSchemeLong %>% 
+nominalMassPos <- scoringSchemeLong |> 
   filter(
     Primary=="MS1" & 
     Secondary=="Molecular properties" &
     Evidence=="Nominal mass" &  
     lipidClassification==ex_a_lc
-  ) %>% 
+  )|> 
   select(value)
-separation <- scoringSchemeLong %>% 
+separation <- scoringSchemeLong |> 
   filter(
     Primary=="MS1" &
     Secondary=="Molecular properties" &  
     Evidence=="Chromatography (RT)" &  
     lipidClassification==ex_a_lc
-  ) %>% 
+  ) |> 
   select(value)
-headGroup <- scoringSchemeLong %>% 
+headGroup <- scoringSchemeLong |> 
   filter(
     Primary=="MS2" &
     Secondary=="CID fragments" &  
     Fragment=="LCF" &  
     Evidence=="Headgroup 1" &  
     lipidClassification==ex_a_lc
-  ) %>% 
+  ) |> 
   select(value)
 score <- sum(  
   nominalMassPos,
@@ -95,48 +95,48 @@ ex_b_norm
 
 ```{r}
 ex_b_lipidCategory <- ex_b_norm[1, "Lipid.Maps.Category"]
-nominalMassPos <- scoringSchemeLong %>% 
+nominalMassPos <- scoringSchemeLong |> 
   filter(
     Primary=="MS1" & 
     Secondary=="Molecular properties" &
     Evidence=="Nominal mass" &  
     lipidClassification==ex_b_lipidCategory
-  ) %>% 
+  ) |> 
   select(value)
-headGroup1Pos <- scoringSchemeLong %>% 
+headGroup1Pos <- scoringSchemeLong |> 
   filter(
     Primary=="MS2" &
     Secondary=="CID fragments" &  
     Fragment=="LCF" &  
     Evidence=="Headgroup 1" &  
     lipidClassification==ex_b_lipidCategory
-  ) %>% 
+  ) |> 
   select(value)
-nominalMassNeg <- scoringSchemeLong %>% 
+nominalMassNeg <- scoringSchemeLong |> 
   filter(
     Primary=="MS1" & 
     Secondary=="Molecular properties" &
     Evidence=="Nominal mass" &  
     lipidClassification==ex_b_lipidCategory
-  ) %>% 
+  ) |> 
   select(value)
-headGroup1Neg <- scoringSchemeLong %>% 
+headGroup1Neg <- scoringSchemeLong |> 
   filter(
     Primary=="MS2" &
     Secondary=="CID fragments" &  
     Fragment=="LCF" &  
     Evidence=="Headgroup 2" &  
     lipidClassification==ex_b_lipidCategory
-  ) %>% 
+  ) |>
   select(value)
-fa1Neg <- scoringSchemeLong %>% 
+fa1Neg <- scoringSchemeLong |> 
   filter(
     Primary=="MS2" &
     Secondary=="CID fragments" &  
     Fragment=="MLF" &  
     Evidence=="Fatty acyl 1-1" &  
     lipidClassification==ex_b_lipidCategory
-  ) %>% 
+  ) |>
   select(value)
 score <- sum(  
   nominalMassPos,
