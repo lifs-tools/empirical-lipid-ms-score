@@ -1,4 +1,4 @@
-Lipid.Maps.Main.Class,EPoSM
+Lipid.Maps.Main.Class,LipidCategoryOrClass
 FA,FA
 #Octanoids,FA mod
 #Eicosanoids,FA mod
@@ -40,11 +40,11 @@ PIP(3'),PIP
 PIP(4'),PIP
 PIP(5'),PIP
 PIP2,PIP
-PIP2(3',4'),PIP
-PIP2(3',5'),PIP
-PIP2(4',5'),PIP
+"PIP2(3',4')",PIP
+"PIP2(3',5‘)",PIP
+"PIP2(4',5‘)",PIP
 PIP3,PIP
-PIP3(3',4',5'),PIP
+"PIP3(3',4' )",PIP
 CL,CL
 #DLCL,CL
 #LCL,CL
@@ -82,7 +82,7 @@ GB,Gan
 GT,Gan
 GD,Gan
 GQ,Gan
-# unknown in goslin
+# unknown in goslin,
 hydroxylated Cer,Cer OH
 ST,ST
 SE,SE

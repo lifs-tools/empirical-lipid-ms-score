@@ -2,12 +2,12 @@ loadScoringTable <- function() {
   scoringScheme <- read_excel(
     path = file.path("..","data", "Table 1_mod.xlsx"),
     sheet = "Scoring scheme", 
-    range = "A1:X30"
+    range = "A1:Z30"
   )
   scoringSchemeLong <- scoringScheme %>% 
     pivot_longer(
-      cols=!Primary:Evidence, 
-      names_to = "lipidClassification"
+      cols=!Primary:ID, 
+      names_to = "LipidCategoryOrClass"
     )
   scoringSchemeLong
 }
@@ -15,7 +15,7 @@ loadScoringTable <- function() {
 lipidClassFromName <- function(lipidName, registeredLipidClasses) {
   tryCatch({
     # try to match using goslin and Lipid.Maps.Main.Class
-    lipidName <- "LPE 32:1"
+    # lipidName <- "LPE 32:1"
     goslinResm <- rgoslin::parseLipidNames(lipidName)  
     return(goslinResm$Lipid.Maps.Category)
   }, error -> {
@@ -42,5 +42,11 @@ lipidClassFromName <- function(lipidName, registeredLipidClasses) {
 }
 
 calculateScoreLong <- function(scoringTable, longFormatTable) {
-  longFormatTable |> left_join(longFormatTable, by=c("LipidCategoryOrClass"="lipidClassification","Feature"="Evidence"))
+  longFormatTable |> left_join(longFormatTable, by=c("LipidCategoryOrClass"="LipidCategoryOrClass","Feature"="Evidence"))
+}
+
+calculateTotalLipidScoresTableData <- function(lipidScoresTableData) {
+  lipidScoresTableData |>
+  group_by(Name, LipidCategoryOrClass) |>
+  summarise(TotalScore=sum(Score),ScoreCode=paste0(str_sort(ID, numeric=T), collapse = ", "))
 }
