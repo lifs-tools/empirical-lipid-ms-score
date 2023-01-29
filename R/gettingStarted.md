@@ -66,11 +66,55 @@ If you choose to check the lipid names, the Goslin library will attempt to parse
 
 ## Input Data Format - Mandatory column names
 
+The following sections describe the (case-sensitive) column names required to be included for the long and wide format, respectively. Please note that the given order is **NOT** mandatory but recommended.
+
+You can alternatively download the example EXCEL file, which contains separate sheets in the wide and long format.
+
 ### Long Format
 
-Name	LipidCategoryOrClass	IonMode	Feature	Value
-
+- Name
+- LipidCategoryOrClass
+- IonMode
+- Feature
+- Value
 
 ### Wide Format
 
-Name	LipidCategoryOrClass	IonMode	Nominal mass	Mass 5ppm	Mass 1ppm	Fragment mass 5ppm	Chromatography (RT)	Ion mobility (CCS)	Headgroup 1	Headgroup 2	Headgroup 3	Headgroup 4	Fatty acyl 1-1	Fatty acyl 1-2	Fatty acyl 1-3	Fatty acyl 1-4	Fatty acyl 2-1	Fatty acyl 2-2	Fatty acyl 2-3	Fatty acyl 2-4	Fatty acyl 3-1	Fatty acyl 3-2	Fatty acyl 3-3	Fatty acyl 3-4	Fatty acyl ratio (sn-position)	Double bond/ring position	Functional group ID	Functional group position	Phosphate group position	Double bond configuration	Stereochemistry
+- Name
+- LipidCategoryOrClass
+- IonMode
+- Nominal mass
+- Mass 5ppm
+- Mass 1ppm
+- Fragment mass 5ppm
+- Chromatography (RT)
+- Ion mobility (CCS)
+- Headgroup 1
+- Headgroup 2
+- Headgroup 3
+- Headgroup 4
+- Fatty acyl 1-1
+- Fatty acyl 1-2
+- Fatty acyl 1-3
+- Fatty acyl 1-4
+- Fatty acyl 2-1
+- Fatty acyl 2-2
+- Fatty acyl 2-3
+- Fatty acyl 2-4
+- Fatty acyl 3-1
+- Fatty acyl 3-2
+- Fatty acyl 3-3
+- Fatty acyl 3-4
+- Fatty acyl ratio (sn-position)
+- Double bond/ring position
+- Functional group ID
+- Functional group position
+- Phosphate group position
+- Double bond configuration
+- Stereochemistry
+
+## References
+
+[1] D. Kopczynski, N. Hoffmann, B. Peng, G. Liebisch, F. Spener, and R. Ahrends, "Goslin 2.0 Implements the Recent Lipid Shorthand Nomenclature for MS-Derived Lipid Structures," Anal. Chem., vol. 94, no. 16, pp. 6097–6101, Apr. 2022, doi: https://doi.org/10.1021/acs.analchem.1c05430
+
+[2] G. Liebisch *et al.*, "Update on LIPID MAPS classification, nomenclature, and shorthand notation for MS-derived lipid structures," J Lipid Res, vol. 61, no. 12, pp. 1539–1555, Dec. 2020, doi: https://doi.org/10.1194/jlr.S120001025
