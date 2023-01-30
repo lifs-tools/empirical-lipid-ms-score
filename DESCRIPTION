@@ -1,0 +1,34 @@
+Package: eposmol
+Title: EPoS-MOL
+Version: 0.0.1.9000
+Authors@R: c(
+    person("Nils", "Hoffmann", email = "nils.hoffmann@cebitec.uni-bielefeld.de", role = c("aut", "cre"), comment = c(ORCID = "0000-0002-6540-6875"))
+  )
+Author: Nils Hoffmann [aut, cre]
+Maintainer: Nils Hoffmann <nils.hoffmann@cebitec.uni-bielefeld.de>
+Description: While the official shorthand nomenclature of lipids is a first and important step towards a reporting quality tool, an additional point score reflects the quality of reported data at an even more detailed granularity. Thus, the **E**mpirical **Po**int **S**core **Mo**del for MS-based **L**ipidomics (EPoS-MoL) is a lipidomics scoring scheme which takes into account all the different layers of analytical information to be obtained by mass spectrometry, chromatography and ion mobility spectrometry and awards scoring points for each of them.
+Depends: R (>= 4.1.0)
+License: MIT + file LICENSE
+URL: https://github.com/lifs-tools/eposmols
+BugReports: https://github.com/lifs-tools/eposmol/issues
+Encoding: UTF-8
+LazyData: true
+Imports:
+    shiny,
+    shinyjs,
+    readxl,
+    rgoslin,
+    openxlsx,
+    dplyr,
+    tidyr,
+    stringr,
+    htmltools
+Suggests:
+    testthat,
+    shinytest2,
+    diffviewer,
+    pkgdown
+RoxygenNote: 7.2.3
+Remotes:
+    github::lifs-tools/rgoslin@master
+VignetteBuilder: knitr

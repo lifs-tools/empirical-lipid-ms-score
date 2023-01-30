@@ -1,12 +1,30 @@
-FROM rocker/shiny:4.2
-RUN apt-get update && apt-get install -y libssl-dev libxml2-dev build-essential \
-  libicu-dev
+FROM rocker/r-ver:4.2
+RUN apt-get update && apt-get install -y \
+  --no-install-recommends \
+  libssl-dev \
+  libxml2-dev \
+  build-essential \
+  libicu-dev \
+  && apt-get clean \
+  && rm -rf /var/lib/apt/lists/*
 
-ADD install.R /tmp/
+RUN /rocker_scripts/install_shiny_server.sh
 
+RUN install2.r --error --skipinstalled \
+  openxlsx \
+  readxl \
+  shinyjs \
+  dplyr \
+  tidyr \
+  stringr \
+  htmltools \
+  devtools
+
+COPY install.R /tmp/
 RUN R -f /tmp/install.R
 
 COPY / /opt/eposmol
+RUN rm -f /opt/eposmol/.dev
 RUN chown -R shiny.shiny /opt/eposmol
 RUN cd /opt/
 
@@ -17,8 +35,8 @@ RUN mkdir -p /srv/shiny-server
 RUN rm -r /srv/shiny-server/*
 RUN ln -s /opt/eposmol/R /srv/shiny-server/eposmol
 
-COPY shiny-server.sh /usr/bin/shiny-server.sh
-
-RUN chmod +x /usr/bin/shiny-server.sh
+USER shiny
 
 EXPOSE 3838
+
+CMD ["/usr/bin/shiny-server"]

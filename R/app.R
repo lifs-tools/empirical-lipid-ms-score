@@ -6,13 +6,29 @@
 
 library(shiny)
 library(shinyjs)
-library(tidyverse)
 library(readxl)
 library(rgoslin)
 library(openxlsx)
+library(dplyr)
+library(tidyr)
+library(stringr)
+library(htmltools)
 
-source("shinyio.R")
+source("eposmol.R")
+
+appInfo <- list(
+  "application.name"="EPoS-MoL",
+  "application.version"="0.0.1",
+  "application.date"=date(),
+  "application.authors"="Nils Hoffmann",
+  "application.license"="MIT",
+  "application.url"="https://github.com/lifs-tools/eposmol",
+  "application.imprintAndPrivacyPolicy"="https://lifs-tools.org/imprint-privacy-policy.html",
+  "application.issues"="https://github.com/lifs-tools/eposmol/issues"
+)
+
 scoringTable <- loadScoringTable()
+lipidCategoryAndClassMapTable <- loadCategoryAndClassMapTable()
 lipidClassifications <-
   sort(unique(scoringTable$LipidCategoryOrClass))
 primaryClassifications <- sort(unique(scoringTable$Primary))
@@ -27,6 +43,20 @@ lipidScoresTableDataEmpty <- tibble::tibble(
   Feature = character(),
   Value = character(),
   Score = numeric()
+)
+
+totalLipidScoresTableDataEmpty <- tibble::tibble(
+  Name = character(),
+  LipidCategoryOrClass = character(),
+  TotalScore = numeric()
+)
+
+lipidTableDataEmpty <- tibble::tibble(
+  Name = character(),
+  LipidCategoryOrClass = character(),
+  IonMode = character(),
+  Feature = character(),
+  Value = character()
 )
 
 requiredColumnsCommon <- c("Name", "LipidCategoryOrClass", "IonMode")
@@ -70,7 +100,9 @@ ui <- function(request) {
               choices = c("wide", "long")
             ),
             tags$hr(),
-            actionButton("loadExcel", "Load table", class = "btn-primary"),
+            shinyjs::disabled(
+              actionButton("loadExcel", "Load table", class = "btn-primary")
+            ),
             actionButton("reset1", "Reset", class = "btn-danger")
           ),
           tabPanel(
@@ -100,11 +132,19 @@ ui <- function(request) {
               label = "Evidence Stream",
               choices = evidenceClassifications
             ),
-            textInput("evidenceScore",
-              label = "Lipid Score",
-              value = NA
+            textInput("manualValue",
+                      label = "Value (optional)",
+                      value = ""
             ),
-            actionButton("addScore", "Add score", class = "btn-primary"),
+            shinyjs::disabled(
+              textInput("evidenceScore",
+                label = "Lipid Score",
+                value = NA
+              )
+            ),
+            shinyjs::disabled(
+              actionButton("addScore", "Add score", class = "btn-primary")
+            ),
             actionButton("reset2", "Reset", class = "btn-danger")
           )
         ),
@@ -128,6 +168,7 @@ ui <- function(request) {
             fluidRow(
               column(
                 12,
+                br(),
                 dataTableOutput("totalLipidEvidenceScoreTable"),
                 disabled(actionButton(
                   "checkNames",
@@ -135,7 +176,7 @@ ui <- function(request) {
                   class = "btn-success",
                   icon = icon("check")
                 )),
-                disabled(downloadButton("download", "Download Total Score Table",
+                disabled(downloadButton("download", "Download Score Tables",
                   class =
                     "btn-success"
                 ))
@@ -146,6 +187,7 @@ ui <- function(request) {
             "Individual Scores",
             fluidRow(column(
               12,
+              br(),
               dataTableOutput("lipidEvidenceScoreTable")
             ))
           ),
@@ -153,6 +195,7 @@ ui <- function(request) {
             "Original Table",
             fluidRow(column(
               12,
+              br(),
               dataTableOutput("originalTable")
             ))
           ),
@@ -160,10 +203,78 @@ ui <- function(request) {
             "Reference Score Table",
             fluidRow(column(
               12,
+              br(),
               dataTableOutput("referenceScoreTable")
             ))
+          ),
+          tabPanel(
+            "Lipid Category & Class Map",
+            fluidRow(column(
+              12,
+              br(),
+              dataTableOutput("lipidCategoryAndClassMapTable")
+            ))
+          ),
+          tabPanel(
+            "About EPoS-MoL",
+            fluidRow(
+              column(
+                width = 12,
+                h2("Application Information"),
+                column(
+                  width = 12,
+                  tags$label("Name:"),
+                  textOutput(
+                    "applicationName", inline = TRUE
+                  ),
+                  tags$br(),
+                  tags$label("Version:"),
+                  textOutput(
+                    "applicationVersion", inline = TRUE
+                  ),
+                  tags$br(),
+                  tags$label("Build Date:"),
+                  textOutput(
+                    "applicationDate", inline = TRUE
+                  ),
+                  tags$br(),
+                  tags$label("Authors:"),
+                  textOutput(
+                    "applicationAuthors", inline = TRUE
+                  ),
+                  tags$br(),
+                  tags$label("License:"),
+                  textOutput(
+                    "applicationLicense", inline = TRUE
+                  ),
+                  tags$br(),
+                  tags$label("Homepage:"),
+                  uiOutput(
+                    "applicationHomepage", inline = TRUE
+                  ),
+                  tags$br(),
+                  tags$label("Imprint & Privacy Policy:"),
+                  uiOutput(
+                    "imprintAndPrivacyPolicy", inline = TRUE
+                  ),
+                  tags$br(),
+                  uiOutput(
+                    "applicationIssues"
+                  )
+                )
+              )
+            ),
+            fluidRow(
+              column(
+                width = 12,
+                h2("Libraries used by EPoS-MoL"),
+                # collapsible = TRUE,
+                # collapsed = TRUE,
+                dataTableOutput("appLibraries")
+              )
+            )
           )
-        ),
+        )
       )
     )
   )
@@ -171,53 +282,50 @@ ui <- function(request) {
 server <- function(input, output, session) {
   values <- reactiveValues()
   values$lipidScoresTableData <- lipidScoresTableDataEmpty
-  totalLipidScoresTableData <- tibble::tibble(
-    Name = character(),
-    LipidCategoryOrClass = character(),
-    TotalScore = numeric()
-  )
+  values$tble <- lipidTableDataEmpty
+  values$totalLipidScoresTableData <- totalLipidScoresTableDataEmpty
   output$lipidCategoryOrClass <-
     renderPrint({
       input$lipidCategoryOrClass
     })
 
   primaryClassificationChoices <- reactive({
-    unique(scoringTable %>%
-      pull(Primary))
+    unique(scoringTable |>
+      dplyr::pull(Primary))
   })
 
   secondaryClassificationChoices <- reactive({
     unique(
-      scoringTable %>%
-        filter(
+      scoringTable |>
+        dplyr::filter(
           LipidCategoryOrClass == input$lipidCategoryOrClass &
             Primary == input$primaryClassification
-        ) %>%
-        pull(Secondary)
+        ) |>
+        dplyr::pull(Secondary)
     )
   })
 
   evidenceClassificationChoices <- reactive({
     unique(
-      scoringTable %>%
-        filter(
+      scoringTable |>
+        dplyr::filter(
           LipidCategoryOrClass == input$lipidCategoryOrClass &
             Primary == input$primaryClassification &
             Secondary == input$secondaryClassification
-        ) %>%
-        pull(Evidence)
+        ) |>
+        dplyr::pull(Evidence)
     )
   })
 
   evidenceStreamScore <- reactive({
-    scoringTable %>%
-      filter(
+    scoringTable |>
+      dplyr::filter(
         LipidCategoryOrClass == input$lipidCategoryOrClass &
           Primary == input$primaryClassification &
           Secondary == input$secondaryClassification &
           Evidence == input$evidenceClassification
-      ) %>%
-      pull(value)
+      ) |>
+      dplyr::pull(value)
   })
   observe({
     updateSelectInput(session, "primaryClassification",
@@ -241,22 +349,35 @@ server <- function(input, output, session) {
   })
 
   observeEvent(input$reset1, {
-    values$tble <- NA
-    values$lipidScoresTableData <- NA
-    values$totalLipidScoresTableData <- NA
+    shinyjs::reset("tableFile")
     disable("checkNames")
     disable("download")
+    disable("loadExcel")
+    values$tble <- lipidTableDataEmpty
+    values$lipidScoresTableData <- lipidScoresTableDataEmpty
+    values$totalLipidScoresTableData <- totalLipidScoresTableDataEmpty
   })
 
   observeEvent(input$reset2, {
-    values$tble <- NA
-    values$lipidScoresTableData <- NA
-    values$totalLipidScoresTableData <- NA
+    shinyjs::reset("tableFile")
     disable("checkNames")
     disable("download")
+    disable("loadExcel")
+    values$tble <- lipidTableDataEmpty
+    values$lipidScoresTableData <- lipidScoresTableDataEmpty
+    values$totalLipidScoresTableData <- totalLipidScoresTableDataEmpty
+  })
+
+  observeEvent(input$lipidName, {
+    if (stringr::str_length(input$lipidName)>0) {
+      shinyjs::enable("addScore")
+    } else {
+      shinyjs::disable("addScore")
+    }
   })
 
   observeEvent(input$tableFile, {
+    enable("loadExcel")
     updateSelectInput(session,
       "tableSheet",
       choices = readxl::excel_sheets(input$tableFile$datapath)
@@ -266,72 +387,35 @@ server <- function(input, output, session) {
   observeEvent(input$loadExcel, {
     tryCatch(
       {
-        values$tble <- NA
         values$lipidScoresTableData <- NA
         values$totalLipidScoresTableData <- NA
-        values$tble <-
+        tble <-
           readxl::read_excel(
             input$tableFile$datapath,
             sheet = input$tableSheet,
             col_names = TRUE
           )
+        lipidScoresTableData <- lipidScoresTableDataEmpty
         if (input$tableFormat == "long") {
-          values$lipidScoresTableData <- values$tble |>
-            drop_na() |>
-            left_join(
-              scoringTable,
-              by = c(
-                "LipidCategoryOrClass" = "LipidCategoryOrClass",
-                "Feature" = "Evidence"
-              )
-            ) |>
-            rename(Score = value) |>
-            distinct(Name, LipidCategoryOrClass, IonMode, Feature, .keep_all = TRUE) |>
-            distinct(.keep_all = TRUE) |>
-            arrange(.by_group = TRUE)
-          naScores <- c(is.na(values$lipidScoresTableData$Score))
+          lipidScoresTableData <- readLongTable(tble, scoringTable)
           # validate(
           #   need(try(sum(naScores, na.rm = TRUE)>0), which(naScores==TRUE))
           # )
-          values$totalLipidScoresTableData <-
-            calculateTotalLipidScoresTableData(values$lipidScoresTableData)
         } else {
           # validate(
           #   need(!all(requiredColumnsWide %in% names(values$tble)), paste0("Input table must contain column names (case-sensitive): ", paste(requiredColumnsWide, ", "))),
           # )
-          values$lipidScoresTableData <- values$tble |>
-            group_by(Name, LipidCategoryOrClass, IonMode) |>
-            pivot_longer(
-              4:last_col(),
-              names_to = "Feature",
-              values_to = "Value",
-              values_ptypes = list(Value = character()),
-              values_transform = as.character
-            ) |>
-            drop_na() |>
-            left_join(
-              scoringTable,
-              by = c(
-                "LipidCategoryOrClass" = "LipidCategoryOrClass",
-                "Feature" = "Evidence"
-              )
-            ) |>
-            rename(Score = value) |>
-            group_by(Name, LipidCategoryOrClass, IonMode) |>
-            distinct(Name, LipidCategoryOrClass, IonMode, Feature, .keep_all = TRUE) |>
-            arrange(.by_group = TRUE)
-          naScores <- c(is.na(values$lipidScoresTableData$Score))
-          # validate(
-          # need(sum(naScores, na.rm = TRUE)>0, which(naScores==TRUE))
-          # )
-          values$totalLipidScoresTableData <-
-            calculateTotalLipidScoresTableData(values$lipidScoresTableData)
+          lipidScoresTableData <- readWideTable(tble, scoringTable)
         }
+        values$tble <- tble
+        values$lipidScoresTableData <- lipidScoresTableData
+        values$totalLipidScoresTableData <-
+          calculateTotalLipidScoresTableData(lipidScoresTableData)
         updateTabsetPanel(session, "mainPanels",
           selected = "Total Scores"
         )
-        enable("checkNames")
-        enable("download")
+        shinyjs::enable("checkNames")
+        shinyjs::enable("download")
       },
       error = function(cond) {
         return(NA)
@@ -349,64 +433,28 @@ server <- function(input, output, session) {
     if (is.null(values$manualLipidScoresTableData)) {
       values$manualLipidScoresTableData <- values$lipidScoresTableData
     }
-    values$manualLipidScoresTableData <- values$manualLipidScoresTableData |>
-      ungroup() |>
-      add_row(
-        Name = input$lipidName,
-        LipidCategoryOrClass = input$lipidCategoryOrClass,
-        IonMode = input$ionMode,
-        Feature = input$evidenceClassification,
-        Value = "",
-        Score = as.numeric(input$evidenceScore)
-      ) |>
-      group_by(Name, LipidCategoryOrClass, IonMode)
-    values$lipidScoresTableData <- values$manualLipidScoresTableData |>
-      ungroup() |>
-      select(-ID,-Primary,-Secondary,-Fragment) |>
-      left_join(
-        scoringTable,
-        by = c(
-          "LipidCategoryOrClass" = "LipidCategoryOrClass",
-          "Feature" = "Evidence"
-        )
-      ) |>
-      group_by(Name, LipidCategoryOrClass, IonMode) |>
-      distinct(Name, LipidCategoryOrClass, IonMode, Feature, .keep_all = TRUE) |>
-      arrange(.by_group = TRUE)
+    manualLipidScoresTableData <- addRowManually(
+      values$manualLipidScoresTableData,
+      lipidName=input$lipidName,
+      lipidCategoryOrClass=input$lipidCategoryOrClass,
+      ionMode=input$ionMode,
+      evidenceClassification=input$evidenceClassification,
+      evidenceScore=input$evidenceScore
+    )
+    values$manualLipidScoresTableData <- manualLipidScoresTableData
+    values$lipidScoresTableData <- readManualTable(manualLipidScoresTableData, scoringTable)
     values$totalLipidScoresTableData <-
       calculateTotalLipidScoresTableData(values$lipidScoresTableData)
     updateTabsetPanel(session, "mainPanels",
                       selected = "Individual Scores"
     )
-    enable("checkNames")
-    enable("download")
+    shinyjs::enable("checkNames")
+    shinyjs::enable("download")
   })
 
   observeEvent(input$checkNames, {
     req(values$totalLipidScoresTableData)
-    tryCatch(
-      {
-        goslinResm <-
-          rgoslin::parseLipidNames(values$totalLipidScoresTableData$Name)
-        messages <- goslinResm$Message
-        validNames <- goslinResm$Message %in% c("NA")
-        messages[validNames] <- ""
-        messages[!validNames] <- "Unrecognised shorthand name"
-        values$totalLipidScoresTableData$Message <- messages
-        values$totalLipidScoresTableData$Lipid.Maps.Category <-
-          goslinResm$Lipid.Maps.Category
-        values$totalLipidScoresTableData$Lipid.Maps.Main.Class <-
-          goslinResm$Lipid.Maps.Main.Class
-        values$totalLipidScoresTableData$Normalized.Name <-
-          goslinResm$Normalized.Name
-      },
-      error = function(cond) {
-        return(NA)
-      },
-      warning = function(cond) {
-        return(NA)
-      }
-    )
+    values$totalLipidScoresTableData <- checkNames(values$totalLipidScoresTableData)
   })
 
   output$lipidEvidenceScoreTable <- renderDataTable(values$lipidScoresTableData,
@@ -437,28 +485,65 @@ server <- function(input, output, session) {
     )
   )
 
+  output$lipidCategoryAndClassMapTable <- renderDataTable(lipidCategoryAndClassMapTable,
+    options = list(
+     select = "single",
+     scrollX = TRUE
+    )
+  )
+
   output$sampleFile <- downloadHandler(
     filename = function() {
       paste0("EPOS-Mol-Examples", ".xlsx")
     },
     content = function(file) {
-      file.copy("../data/Table S2.xlsx", file)
+      file.copy(system.file("extdata", "Table S2.xlsx", package = "eposmol"), file)
     },
     contentType = "application/msexcel"
   )
 
   output$download <- downloadHandler(
     filename = function() {
-      paste0("EPOS-Mol-Total-Scores", ".xlsx")
+      paste0("EPOS-Mol-Scores", ".xlsx")
     },
     content = function(file) {
-      write.xlsx(values$totalLipidScoresTableData, file)
+      openxlsx::write.xlsx(
+        list(
+          "Total Scores"=values$totalLipidScoresTableData,
+          "Individual Scores"=values$lipidScoresTableData
+        ),
+        file
+      )
     }
   )
 
   output$gettingStarted <- renderUI({
-    HTML(markdown::markdownToHTML("gettingStarted.md"))
+    HTML(htmltools::includeMarkdown("gettingStarted.md"))
   })
+
+  output$applicationName <- shiny::renderText({appInfo$application.name})
+  output$applicationVersion <- shiny::renderText({appInfo$application.version})
+  output$applicationDate <- shiny::renderText({appInfo$application.date})
+  output$applicationAuthors <- shiny::renderText({appInfo$application.authors})
+  output$applicationLicense <- shiny::renderText({appInfo$application.license})
+  output$applicationHomepage <- shiny::renderUI({tags$a(href=appInfo$application.url, appInfo$application.url)})
+  output$imprintAndPrivacyPolicy <- shiny::renderUI({tags$a(href=appInfo$application.imprintAndPrivacyPolicy, appInfo$application.imprintAndPrivacyPolicy)})
+  output$applicationIssues <- shiny::renderUI({tags$a(href=appInfo$application.issues, "Report an issue", class="btn btn-danger")})
+
+  loadedLibraries <- reactive({
+    assemblePackageDescriptions((.packages()))
+  })
+
+  output$appLibraries <- renderDataTable(
+    loadedLibraries(),
+    options = list(
+      dom = 'Bfrtlip',
+      buttons = c('colvis', 'copy', 'csv', 'excel', 'pdf', 'print'),
+      lengthMenu = list(c(10, 25, -1), c('10', '25', 'All')),
+      pageLength = 25
+    ),
+    escape = FALSE
+  )
 
   # Save extra values in state$values when we bookmark
   onBookmark(function(state) {
@@ -470,6 +555,7 @@ server <- function(input, output, session) {
 
   # Read values from state$values when we restore
   onRestore(function(state) {
+    values <- reactiveValues()
     values$tble <- state$values$tble
     values$totalLipidScoresTableData <-
       state$values$totalLipidScoresTableData
@@ -477,9 +563,27 @@ server <- function(input, output, session) {
   })
 }
 
+devOptions <- options(
+  shiny.reactlog = TRUE,
+  shiny.error = browser,
+  shiny.autoload.r = TRUE
+)
+prodOptions <- options(
+  shiny.autoload.r = TRUE
+)
+
+if (file.exists(".dev")) {
+  shinyOptions <- devOptions
+  cat("Using development options!")
+} else {
+  shinyOptions <- prodOptions
+  cat("Using production options!")
+}
+
 # Run the application
 shinyApp(
   ui = ui,
   server = server,
-  enableBookmarking = "server"
+  enableBookmarking = "server",
+  options = shinyOptions
 )

@@ -1,5 +1,7 @@
 # Welcome to EPoS-MoL
 
+![EPoS-MoL Logo](../eposmol.svg)
+
 While the official shorthand nomenclature of lipids is a first and important step towards a reporting quality tool, an additional point score reflects the quality of reported data at an even more detailed granularity. Thus, the **E**mpirical **Po**int **S**core **Mo**del for MS-based **L**ipidomics (EPoS-MoL) is a lipidomics scoring scheme which takes into account all the different layers of analytical information to be obtained by mass spectrometry, chromatography and ion mobility spectrometry and awards scoring points for each of them.
 
 Furthermore the scoring scheme is integrated with the annotation levels as proposed by the official shorthand nomenclature, with a point score which roughly correlates with the annotated compound details. The merit of such a scoring system is the fact, that it abstracts data quality into a number which gives even the non-lipidomics expert an idea about the reporting quality at first glance. Additionally it could serve as an tool supporting self-control of researchers and for data quality assessment in the peer review process.
@@ -62,7 +64,29 @@ The 'Total Scores' tab allows you to perform two actions:
 1. (Optional) Check the lipid names with Goslin<sup>1</sup> for compliance with the latest lipid shorthand nomenclature<sup>2</sup>.
 2. Export and download the total score table as a spreadsheet file.
 
-If you choose to check the lipid names, the Goslin library will attempt to parse your lipid names. The resulting columns will be joined to the total scores table, reporting LIPID MAPS Category and Main Class, along with the normalized lipid shorthand name. If parsing fails, 'Unrecognised shorthand name' in the Message column will indicate it.
+The result spreadsheet will contain two sheets:
+
+1. Total Scores and
+2. Individual Scores
+
+*Total Scores* will contain the columns *Name*,	*LipidCategoryOrClass*,	*TotalScore*, and 	*ScoreCode*. It will contain one row per unique lipid name and LipidCategoryOrClass entry.
+The *TotalScore* column will contain the sum of the individual point score contributions, whose identities are provided in the *ScoreCode* column.
+
+If you choose to check the lipid names, the Goslin library will attempt to parse your lipid names. The resulting columns will be joined to the total scores table, reporting LIPID MAPS Category (*Lipid.Maps.Category*) and Main Class (*Lipid.Maps.Main.Class*), along with the normalized lipid shorthand name (*Normalized.Name*). If parsing fails, 'Unrecognised shorthand name' in the *Message* column will indicate it.
+
+The *Individual Scores* table contains each score contribution per reported feature. So in effect, there will usually be multiple rows for each lipid name.
+The table will consist of the following columns: 
+
+- Name (the lipid name or an arbitrary identifier)
+- LipidCategoryOrClass (the EPoS-MoL lipid (super-)category or class)
+- IonMode ('+' or '-')
+- Feature (the feature name)
+- Value (a user-definable value)
+- Primary (the primary feature dimension)
+- Secondary (the secondary fature dimension)
+- Fragment (the fragment abbreviation, if applicable)
+- ID (a unique ID for the feature coordinate)
+- Score (the point score of the feature)
 
 ## Input Data Format - Mandatory column names
 
