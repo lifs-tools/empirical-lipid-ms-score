@@ -13,6 +13,7 @@ library(dplyr)
 library(tidyr)
 library(stringr)
 library(htmltools)
+library(rintrojs)
 
 source("eposmol.R")
 
@@ -27,8 +28,8 @@ appInfo <- list(
   "application.issues"="https://github.com/lifs-tools/eposmol/issues"
 )
 
-scoringTable <- loadScoringTable()
-lipidCategoryAndClassMapTable <- loadCategoryAndClassMapTable()
+scoringTable <- loadScoringTable(path = file.path("..", "inst", "extdata", "Table 1_mod.xlsx"))
+lipidCategoryAndClassMapTable <- loadCategoryAndClassMapTable(path = file.path("..", "inst", "extdata", "class_map.xlsx"))
 lipidClassifications <-
   sort(unique(scoringTable$LipidCategoryOrClass))
 primaryClassifications <- sort(unique(scoringTable$Primary))
@@ -67,46 +68,77 @@ requiredColumnsWide <-
 # User Interface
 ui <- function(request) {
   fluidPage(
-    includeCSS("custom.css"),
+    includeCSS("www/custom.css"),
     useShinyjs(),
+    introjsUI(),
     titlePanel("EPoS-ML Calculation"),
     sidebarLayout(
       sidebarPanel(
         bookmarkButton(),
+        actionButton("help", icon=icon("question"), class="btn-info", label="Start Tour"),
         tags$hr(),
         tabsetPanel(
           id = "sidebarPanels",
           tabPanel(
             "Upload",
-            fileInput(
-              "tableFile",
-              "Choose EXCEL File",
-              multiple = FALSE,
-              accept = c(
-                "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
-                "application/msexcel",
-                ".xlsx",
-                "xls"
+            tags$br(),
+            introBox(
+              fileInput(
+                "tableFile",
+                "Choose EXCEL File",
+                multiple = FALSE,
+                accept = c(
+                  "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+                  "application/msexcel",
+                  ".xlsx",
+                  "xls"
+                )
+              ),
+              data.step = 1,
+              data.intro = "Upload your lipid annotation data in EXCEL format here."
+            ),
+            tags$hr(),
+            introBox(
+              selectInput("tableSheet",
+                label = "Select the sheet to load",
+                choices = c()
+              ),
+              data.step = 2,
+              data.intro = "Select the sheet to load your data from."
+            ),
+            introBox(
+              selectInput(
+                "tableFormat",
+                label = "Select the table format",
+                choices = c("wide", "long")
+              ),
+              data.step = 3,
+              data.intro = "Choose either the wide or long table format. You can download an example file demonstrating both formats further down."
+            ),
+            tags$hr(),
+            fluidRow(
+              column(12,
+                align="left",
+                introBox(
+                  style="display:inline-block;",
+                  shinyjs::disabled(
+                    actionButton("loadExcel", "Load table", class = "btn-primary")
+                  ),
+                  data.step = 4,
+                  data.intro = "This button will be enabled as soon as you have uploaded a table and have chosen the sheet and table format. Click on it to load the data."
+                ),
+                introBox(
+                  style="display:inline-block;",
+                  actionButton("reset1", "Reset", class = "btn-danger"),
+                  data.step = 5,
+                  data.intro = "Click on this button to reset any inputs. This will also remove any intermediate tables generated from your data, so please be careful!"
+                )
               )
             ),
-            tags$hr(),
-            selectInput("tableSheet",
-              label = "Select the sheet to load",
-              choices = c()
-            ),
-            selectInput(
-              "tableFormat",
-              label = "Select the table format",
-              choices = c("wide", "long")
-            ),
-            tags$hr(),
-            shinyjs::disabled(
-              actionButton("loadExcel", "Load table", class = "btn-primary")
-            ),
-            actionButton("reset1", "Reset", class = "btn-danger")
           ),
           tabPanel(
             "Manual Input",
+            tags$br(),
             textInput("lipidName", "Lipid Name"),
             selectInput(
               "lipidCategoryOrClass",
@@ -149,11 +181,15 @@ ui <- function(request) {
           )
         ),
         tags$hr(),
-        downloadButton(
-          "sampleFile",
-          "Download Example",
-          class = "btn-info",
-          icon = icon("download")
+        introBox(
+          downloadButton(
+            "sampleFile",
+            "Download Example",
+            class = "btn-info",
+            icon = icon("download")
+          ),
+          data.step = 6,
+          data.intro = "Click here to download an example lipid annotation dataset. The file contains to sheets for the wide and long format."
         )
       ),
       mainPanel(
@@ -161,117 +197,155 @@ ui <- function(request) {
           id = "mainPanels",
           tabPanel(
             "Getting Started",
-            uiOutput("gettingStarted")
+            introBox(
+              uiOutput("gettingStarted"),
+              data.step = 7,
+              data.intro = "This tab provides an overview of the EPoS-MOL application workflow and the data formats used."
+            )
           ),
           tabPanel(
             "Total Scores",
-            fluidRow(
-              column(
-                12,
-                br(),
-                dataTableOutput("totalLipidEvidenceScoreTable"),
-                disabled(actionButton(
-                  "checkNames",
-                  "Check Lipid Names",
-                  class = "btn-success",
-                  icon = icon("check")
-                )),
-                disabled(downloadButton("download", "Download Score Tables",
-                  class =
-                    "btn-success"
-                ))
-              )
+            introBox(
+              fluidRow(
+                column(
+                  12,
+                  br(),
+                  dataTableOutput("totalLipidEvidenceScoreTable"),
+                  introBox(
+                    style="display: inline-block;",
+                    disabled(actionButton(
+                      "checkNames",
+                      "Check Lipid Names",
+                      class = "btn-success",
+                      icon = icon("check")
+                    )),
+                    data.step = 13,
+                    data.intro = "Click here to check and automatically normalize supported lipid names into the updated shorthand nomenclature."
+                  ),
+                  introBox(
+                    style="display: inline-block;",
+                    disabled(downloadButton("download", "Download Score Tables",
+                      class =
+                        "btn-success"
+                    )),
+                    data.step = 14,
+                    data.intro = "Click here to download the final total scores table and the individual scores table within a single excel file."
+                  )
+                )
+              ),
+              data.step = 12,
+              data.intro = "This tab provides the total scores for the user provided lipid evidence."
             )
           ),
           tabPanel(
             "Individual Scores",
-            fluidRow(column(
-              12,
-              br(),
-              dataTableOutput("lipidEvidenceScoreTable")
-            ))
+            introBox(
+              fluidRow(column(
+                12,
+                br(),
+                dataTableOutput("lipidEvidenceScoreTable")
+              )),
+              data.step = 11,
+              data.intro = "This tab provides the table of individual scores assigned to the user provided lipid evidence."
+            )
           ),
           tabPanel(
             "Original Table",
-            fluidRow(column(
-              12,
-              br(),
-              dataTableOutput("originalTable")
-            ))
+            introBox(
+              fluidRow(column(
+                12,
+                br(),
+                dataTableOutput("originalTable")
+              )),
+              data.step = 10,
+              data.intro = "This tab shows the original table as provided or manually added to by the user."
+            )
           ),
           tabPanel(
             "Reference Score Table",
-            fluidRow(column(
-              12,
-              br(),
-              dataTableOutput("referenceScoreTable")
-            ))
+            introBox(
+              fluidRow(column(
+                12,
+                br(),
+                dataTableOutput("referenceScoreTable")
+              )),
+              data.step = 9,
+              data.intro = "This tab provides the reference score table of EPoS-MOL for the different lipid classes and evidence levels."
+            )
           ),
           tabPanel(
             "Lipid Category & Class Map",
-            fluidRow(column(
-              12,
-              br(),
-              dataTableOutput("lipidCategoryAndClassMapTable")
-            ))
+            introBox(
+              fluidRow(column(
+                12,
+                br(),
+                dataTableOutput("lipidCategoryAndClassMapTable")
+              )),
+              data.step = 8,
+              data.intro = "This tab provides a mapping from LIPID MAPS category and classes to the (super-)classes used by EPoS-MOL."
+            )
           ),
           tabPanel(
             "About EPoS-MoL",
-            fluidRow(
-              column(
-                width = 12,
-                h2("Application Information"),
+            introBox(
+              fluidRow(
                 column(
                   width = 12,
-                  tags$label("Name:"),
-                  textOutput(
-                    "applicationName", inline = TRUE
-                  ),
-                  tags$br(),
-                  tags$label("Version:"),
-                  textOutput(
-                    "applicationVersion", inline = TRUE
-                  ),
-                  tags$br(),
-                  tags$label("Build Date:"),
-                  textOutput(
-                    "applicationDate", inline = TRUE
-                  ),
-                  tags$br(),
-                  tags$label("Authors:"),
-                  textOutput(
-                    "applicationAuthors", inline = TRUE
-                  ),
-                  tags$br(),
-                  tags$label("License:"),
-                  textOutput(
-                    "applicationLicense", inline = TRUE
-                  ),
-                  tags$br(),
-                  tags$label("Homepage:"),
-                  uiOutput(
-                    "applicationHomepage", inline = TRUE
-                  ),
-                  tags$br(),
-                  tags$label("Imprint & Privacy Policy:"),
-                  uiOutput(
-                    "imprintAndPrivacyPolicy", inline = TRUE
-                  ),
-                  tags$br(),
-                  uiOutput(
-                    "applicationIssues"
+                  h2("Application Information"),
+                  column(
+                    width = 12,
+                    tags$label("Name:"),
+                    textOutput(
+                      "applicationName", inline = TRUE
+                    ),
+                    tags$br(),
+                    tags$label("Version:"),
+                    textOutput(
+                      "applicationVersion", inline = TRUE
+                    ),
+                    tags$br(),
+                    tags$label("Build Date:"),
+                    textOutput(
+                      "applicationDate", inline = TRUE
+                    ),
+                    tags$br(),
+                    tags$label("Authors:"),
+                    textOutput(
+                      "applicationAuthors", inline = TRUE
+                    ),
+                    tags$br(),
+                    tags$label("License:"),
+                    textOutput(
+                      "applicationLicense", inline = TRUE
+                    ),
+                    tags$br(),
+                    tags$label("Homepage:"),
+                    uiOutput(
+                      "applicationHomepage", inline = TRUE
+                    ),
+                    tags$br(),
+                    tags$label("Imprint & Privacy Policy:"),
+                    uiOutput(
+                      "imprintAndPrivacyPolicy", inline = TRUE
+                    ),
+                    tags$br(),
+                    uiOutput(
+                      "applicationIssues"
+                    )
                   )
                 )
-              )
-            ),
-            fluidRow(
-              column(
-                width = 12,
-                h2("Libraries used by EPoS-MoL"),
-                # collapsible = TRUE,
-                # collapsed = TRUE,
-                dataTableOutput("appLibraries")
-              )
+              ),
+              fluidRow(
+                column(
+                  width = 12,
+                  h2("Libraries used by EPoS-MoL"),
+                  # collapsible = TRUE,
+                  # collapsed = TRUE,
+                  dataTableOutput("appLibraries")
+                )
+              ),
+              data.step = 15,
+              data.intro = "This tab provides application related information, where to find the source code and where to report issues."
             )
           )
         )
@@ -457,6 +531,21 @@ server <- function(input, output, session) {
     values$totalLipidScoresTableData <- checkNames(values$totalLipidScoresTableData)
   })
 
+  observeEvent(input$help, {
+     introjs(session,
+             options = list("nextLabel"="Next",
+                            "prevLabel"="Back",
+                            "skipLabel"="Skip"),
+             events = list(
+               onbeforechange = readCallback("switchTabs")#,
+               # oncomplete=I(
+               #   'alert("Thanks for taking the tour!")'
+               #   )
+               )
+     )
+    }
+  )
+
   output$lipidEvidenceScoreTable <- renderDataTable(values$lipidScoresTableData,
     options = list(
       select = "single",
@@ -497,7 +586,7 @@ server <- function(input, output, session) {
       paste0("EPOS-Mol-Examples", ".xlsx")
     },
     content = function(file) {
-      file.copy(system.file("extdata", "Table S2.xlsx", package = "eposmol"), file)
+      file.copy(file.path("..", "inst", "extdata", "Table S2.xlsx"), file)
     },
     contentType = "application/msexcel"
   )
@@ -518,7 +607,7 @@ server <- function(input, output, session) {
   )
 
   output$gettingStarted <- renderUI({
-    HTML(htmltools::includeMarkdown("gettingStarted.md"))
+    HTML(htmltools::includeMarkdown("www/gettingStarted.md"))
   })
 
   output$applicationName <- shiny::renderText({appInfo$application.name})
@@ -579,11 +668,11 @@ if (file.exists(".dev")) {
   shinyOptions <- prodOptions
   cat("Using production options!")
 }
-
 # Run the application
-shinyApp(
+shinyApp <- shinyApp(
   ui = ui,
   server = server,
   enableBookmarking = "server",
   options = shinyOptions
 )
+return(shinyApp)

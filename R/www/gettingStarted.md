@@ -1,6 +1,6 @@
 # Welcome to EPoS-MoL
 
-![EPoS-MoL Logo](../eposmol.svg)
+![EPoS-MoL Logo](eposmol.svg)
 
 While the official shorthand nomenclature of lipids is a first and important step towards a reporting quality tool, an additional point score reflects the quality of reported data at an even more detailed granularity. Thus, the **E**mpirical **Po**int **S**core **Mo**del for MS-based **L**ipidomics (EPoS-MoL) is a lipidomics scoring scheme which takes into account all the different layers of analytical information to be obtained by mass spectrometry, chromatography and ion mobility spectrometry and awards scoring points for each of them.
 

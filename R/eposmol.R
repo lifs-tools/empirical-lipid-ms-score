@@ -1,4 +1,4 @@
-loadScoringTable <- function(path=system.file("extdata", "Table 1_mod.xlsx", package = "eposmol")) {
+loadScoringTable <- function(path=system.file("..", "inst", "extdata", "Table 1_mod.xlsx")) {
   scoringScheme <- readxl::read_excel(
     path = path,
     sheet = "Scoring scheme",
@@ -12,7 +12,7 @@ loadScoringTable <- function(path=system.file("extdata", "Table 1_mod.xlsx", pac
   scoringSchemeLong
 }
 
-loadCategoryAndClassMapTable <- function(path=system.file("extdata", "class_map.xlsx", package = "eposmol")) {
+loadCategoryAndClassMapTable <- function(path=system.file("..", "inst", "extdata", "class_map.xlsx")) {
   lipidCategoryAndClassMap <- readxl::read_excel(
     path = path,
     sheet = "class_map",

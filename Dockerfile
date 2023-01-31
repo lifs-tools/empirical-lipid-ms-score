@@ -18,7 +18,8 @@ RUN install2.r --error --skipinstalled \
   tidyr \
   stringr \
   htmltools \
-  devtools
+  devtools \
+  rintrojs
 
 COPY install.R /tmp/
 RUN R -f /tmp/install.R

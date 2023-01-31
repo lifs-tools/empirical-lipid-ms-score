@@ -22,7 +22,8 @@ Imports:
     dplyr,
     tidyr,
     stringr,
-    htmltools
+    htmltools,
+    rintrojs
 Suggests:
     testthat,
     shinytest2,
