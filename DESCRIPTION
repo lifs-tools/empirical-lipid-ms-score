@@ -23,7 +23,8 @@ Imports:
     tidyr,
     stringr,
     htmltools,
-    rintrojs
+    rintrojs,
+    purrr
 Suggests:
     testthat,
     shinytest2,

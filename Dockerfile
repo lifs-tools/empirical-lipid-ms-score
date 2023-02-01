@@ -19,13 +19,16 @@ RUN install2.r --error --skipinstalled \
   stringr \
   htmltools \
   devtools \
-  rintrojs
+  rintrojs \
+  purrr
 
 COPY install.R /tmp/
 RUN R -f /tmp/install.R
 
 COPY / /opt/eposmol
 RUN rm -f /opt/eposmol/.dev
+RUN rm -r /opt/eposmol/renv
+RUN rm  /opt/eposmol/renv.lock
 RUN chown -R shiny.shiny /opt/eposmol
 RUN cd /opt/
 
@@ -34,7 +37,7 @@ RUN mkdir -p /var/lib/shiny-server/bookmarks/shiny
 RUN mkdir -p /srv/shiny-server
 
 RUN rm -r /srv/shiny-server/*
-RUN ln -s /opt/eposmol/R /srv/shiny-server/eposmol
+RUN ln -s /opt/eposmol/ /srv/shiny-server/eposmol
 
 USER shiny
 

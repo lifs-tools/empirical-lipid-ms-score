@@ -15,7 +15,15 @@ library(stringr)
 library(htmltools)
 library(rintrojs)
 
-source("eposmol.R")
+# if(testthat::is_testing()) {
+#   browser()
+#   source("R/eposmol.R")
+# } else {
+#   if (file.exists(getwd())) {
+#
+#   }
+# source("eposmol.R", local = TRUE)
+# }
 
 appInfo <- list(
   "application.name"="EPoS-MoL",
@@ -28,8 +36,8 @@ appInfo <- list(
   "application.issues"="https://github.com/lifs-tools/eposmol/issues"
 )
 
-scoringTable <- loadScoringTable(path = file.path("..", "inst", "extdata", "Table 1_mod.xlsx"))
-lipidCategoryAndClassMapTable <- loadCategoryAndClassMapTable(path = file.path("..", "inst", "extdata", "class_map.xlsx"))
+scoringTable <- loadScoringTable(path = file.path("inst", "extdata", "Table 1_mod.xlsx"))
+lipidCategoryAndClassMapTable <- loadCategoryAndClassMapTable(path = file.path("inst", "extdata", "class_map.xlsx"))
 lipidClassifications <-
   sort(unique(scoringTable$LipidCategoryOrClass))
 primaryClassifications <- sort(unique(scoringTable$Primary))
@@ -68,7 +76,7 @@ requiredColumnsWide <-
 # User Interface
 ui <- function(request) {
   fluidPage(
-    includeCSS("www/custom.css"),
+    includeCSS("R/www/custom.css"),
     useShinyjs(),
     introjsUI(),
     titlePanel("EPoS-ML Calculation"),
@@ -586,7 +594,7 @@ server <- function(input, output, session) {
       paste0("EPOS-Mol-Examples", ".xlsx")
     },
     content = function(file) {
-      file.copy(file.path("..", "inst", "extdata", "Table S2.xlsx"), file)
+      file.copy(file.path("inst", "extdata", "Table S2.xlsx"), file)
     },
     contentType = "application/msexcel"
   )
@@ -607,7 +615,7 @@ server <- function(input, output, session) {
   )
 
   output$gettingStarted <- renderUI({
-    HTML(htmltools::includeMarkdown("www/gettingStarted.md"))
+    HTML(htmltools::includeMarkdown("R/www/gettingStarted.md"))
   })
 
   output$applicationName <- shiny::renderText({appInfo$application.name})
