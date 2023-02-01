@@ -73,9 +73,8 @@ ui <- function(request) {
     titlePanel("EPoS-ML Calculation"),
     sidebarLayout(
       sidebarPanel(
-        bookmarkButton(),
         # actionButton("help", icon=icon("question"), class="btn-info", label="Start Tour"),
-        tags$hr(),
+        tags$br(),
         tabsetPanel(
           id = "sidebarPanels",
           tabPanel(
@@ -181,15 +180,18 @@ ui <- function(request) {
         ),
         tags$hr(),
         introBox(
+          style="display:inline-block;",
           downloadButton(
             "sampleFile",
             "Download Example",
             class = "btn-info",
+            style="display:inline-block;",
             icon = icon("download")
           ),
           data.step = 6,
           data.intro = "Click here to download an example lipid annotation dataset. The file contains to sheets for the wide and long format."
-        )
+        ),
+        bookmarkButton(style="display:inline-block;float: right"),
       ),
       mainPanel(
         tabsetPanel(
