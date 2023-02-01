@@ -20,15 +20,20 @@ RUN install2.r --error --skipinstalled \
   htmltools \
   devtools \
   rintrojs \
-  purrr
+  purrr \
+  jsonlite \
+  markdown
 
 COPY install.R /tmp/
 RUN R -f /tmp/install.R
 
 COPY / /opt/eposmol
-RUN rm -f /opt/eposmol/.dev
-RUN rm -r /opt/eposmol/renv
-RUN rm  /opt/eposmol/renv.lock
+RUN rm -rf /opt/eposmol/.dev \
+  /opt/eposmol/renv \
+  /opt/eposmol/renv.lock \
+  /opt/eposmol/.Rprofile \
+  /opt/eposmol/.Rhistory \
+  /opt/eposmol/.RData
 RUN chown -R shiny.shiny /opt/eposmol
 RUN cd /opt/
 

@@ -14,16 +14,7 @@ library(tidyr)
 library(stringr)
 library(htmltools)
 library(rintrojs)
-
-# if(testthat::is_testing()) {
-#   browser()
-#   source("R/eposmol.R")
-# } else {
-#   if (file.exists(getwd())) {
-#
-#   }
-# source("eposmol.R", local = TRUE)
-# }
+library(DT)
 
 appInfo <- list(
   "application.name"="EPoS-MoL",
@@ -78,12 +69,12 @@ ui <- function(request) {
   fluidPage(
     includeCSS("R/www/custom.css"),
     useShinyjs(),
-    introjsUI(),
+    # introjsUI(),
     titlePanel("EPoS-ML Calculation"),
     sidebarLayout(
       sidebarPanel(
         bookmarkButton(),
-        actionButton("help", icon=icon("question"), class="btn-info", label="Start Tour"),
+        # actionButton("help", icon=icon("question"), class="btn-info", label="Start Tour"),
         tags$hr(),
         tabsetPanel(
           id = "sidebarPanels",
@@ -218,7 +209,7 @@ ui <- function(request) {
                 column(
                   12,
                   br(),
-                  dataTableOutput("totalLipidEvidenceScoreTable"),
+                  DT::dataTableOutput("totalLipidEvidenceScoreTable"),
                   introBox(
                     style="display: inline-block;",
                     disabled(actionButton(
@@ -227,7 +218,7 @@ ui <- function(request) {
                       class = "btn-success",
                       icon = icon("check")
                     )),
-                    data.step = 13,
+                    data.step = 9,
                     data.intro = "Click here to check and automatically normalize supported lipid names into the updated shorthand nomenclature."
                   ),
                   introBox(
@@ -236,12 +227,12 @@ ui <- function(request) {
                       class =
                         "btn-success"
                     )),
-                    data.step = 14,
+                    data.step = 10,
                     data.intro = "Click here to download the final total scores table and the individual scores table within a single excel file."
                   )
                 )
               ),
-              data.step = 12,
+              data.step = 8,
               data.intro = "This tab provides the total scores for the user provided lipid evidence."
             )
           ),
@@ -251,7 +242,7 @@ ui <- function(request) {
               fluidRow(column(
                 12,
                 br(),
-                dataTableOutput("lipidEvidenceScoreTable")
+                DT::dataTableOutput("lipidEvidenceScoreTable")
               )),
               data.step = 11,
               data.intro = "This tab provides the table of individual scores assigned to the user provided lipid evidence."
@@ -263,9 +254,9 @@ ui <- function(request) {
               fluidRow(column(
                 12,
                 br(),
-                dataTableOutput("originalTable")
+                DT::dataTableOutput("originalTable")
               )),
-              data.step = 10,
+              data.step = 12,
               data.intro = "This tab shows the original table as provided or manually added to by the user."
             )
           ),
@@ -275,9 +266,9 @@ ui <- function(request) {
               fluidRow(column(
                 12,
                 br(),
-                dataTableOutput("referenceScoreTable")
+                DT::dataTableOutput("referenceScoreTable")
               )),
-              data.step = 9,
+              data.step = 13,
               data.intro = "This tab provides the reference score table of EPoS-MOL for the different lipid classes and evidence levels."
             )
           ),
@@ -287,9 +278,9 @@ ui <- function(request) {
               fluidRow(column(
                 12,
                 br(),
-                dataTableOutput("lipidCategoryAndClassMapTable")
+                DT::dataTableOutput("lipidCategoryAndClassMapTable")
               )),
-              data.step = 8,
+              data.step = 14,
               data.intro = "This tab provides a mapping from LIPID MAPS category and classes to the (super-)classes used by EPoS-MOL."
             )
           ),
@@ -349,7 +340,7 @@ ui <- function(request) {
                   h2("Libraries used by EPoS-MoL"),
                   # collapsible = TRUE,
                   # collapsed = TRUE,
-                  dataTableOutput("appLibraries")
+                  DT::dataTableOutput("appLibraries")
                 )
               ),
               data.step = 15,
@@ -539,50 +530,63 @@ server <- function(input, output, session) {
     values$totalLipidScoresTableData <- checkNames(values$totalLipidScoresTableData)
   })
 
-  observeEvent(input$help, {
-     introjs(session,
-             options = list("nextLabel"="Next",
-                            "prevLabel"="Back",
-                            "skipLabel"="Skip"),
-             events = list(
-               onbeforechange = readCallback("switchTabs")#,
-               # oncomplete=I(
-               #   'alert("Thanks for taking the tour!")'
-               #   )
-               )
-     )
-    }
-  )
+  # observeEvent(input$help, {
+  #   mainPanelNames <- c(
+  #     "Getting Started",
+  #     "Total Scores",
+  #     "Individual Scores",
+  #     "Original Table",
+  #     "Reference Score Table",
+  #     "Lipid Category & Class Map",
+  #     "About EPoS-MoL",
+  #     "Getting Started"
+  #   )
+  #   for(panel in mainPanelNames) {
+  #     updateTabsetPanel(session, inputId="mainPanels", selected = panel)
+  #   }
+  #    introjs(session,
+  #            options = list("nextLabel"="Next",
+  #                           "prevLabel"="Back",
+  #                           "skipLabel"="Skip"),
+  #            events = list(
+  #              onbeforechange = readCallback("switchTabs")#,
+  #              # oncomplete=I(
+  #              #   'alert("Thanks for taking the tour!")'
+  #              #   )
+  #              )
+  #    )
+  #   }
+  # )
 
-  output$lipidEvidenceScoreTable <- renderDataTable(values$lipidScoresTableData,
+  output$lipidEvidenceScoreTable <- DT::renderDataTable(values$lipidScoresTableData,
     options = list(
       select = "single",
       scrollX = TRUE
     )
   )
 
-  output$totalLipidEvidenceScoreTable <- renderDataTable(values$totalLipidScoresTableData,
+  output$totalLipidEvidenceScoreTable <- DT::renderDataTable(values$totalLipidScoresTableData,
     options = list(
       select = "single",
       scrollX = TRUE
     )
   )
 
-  output$originalTable <- renderDataTable(values$tble,
+  output$originalTable <- DT::renderDataTable(values$tble,
     options = list(
       select = "single",
       scrollX = TRUE
     )
   )
 
-  output$referenceScoreTable <- renderDataTable(scoringTable,
+  output$referenceScoreTable <- DT::renderDataTable(scoringTable,
     options = list(
       select = "single",
       scrollX = TRUE
     )
   )
 
-  output$lipidCategoryAndClassMapTable <- renderDataTable(lipidCategoryAndClassMapTable,
+  output$lipidCategoryAndClassMapTable <- DT::renderDataTable(lipidCategoryAndClassMapTable,
     options = list(
      select = "single",
      scrollX = TRUE
@@ -631,7 +635,7 @@ server <- function(input, output, session) {
     assemblePackageDescriptions((.packages()))
   })
 
-  output$appLibraries <- renderDataTable(
+  output$appLibraries <- DT::renderDataTable(
     loadedLibraries(),
     options = list(
       dom = 'Bfrtlip',
