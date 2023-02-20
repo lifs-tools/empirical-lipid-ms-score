@@ -22,7 +22,8 @@ RUN install2.r --error --skipinstalled \
   rintrojs \
   purrr \
   jsonlite \
-  markdown
+  markdown \
+  DT
 
 COPY install.R /tmp/
 RUN R -f /tmp/install.R

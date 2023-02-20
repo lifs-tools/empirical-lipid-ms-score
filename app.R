@@ -20,7 +20,7 @@ appInfo <- list(
   "application.name"="EPoS-MoL",
   "application.version"="0.0.1",
   "application.date"=date(),
-  "application.authors"="Nils Hoffmann",
+  "application.authors"="Nils Hoffmann, Harald Köfeler",
   "application.license"="MIT",
   "application.url"="https://github.com/lifs-tools/eposmol",
   "application.imprintAndPrivacyPolicy"="https://lifs-tools.org/imprint-privacy-policy.html",
