@@ -1,4 +1,4 @@
-FROM rocker/r-ver:4.2
+FROM rocker/r-ver:4.3
 RUN apt-get update && apt-get install -y \
   --no-install-recommends \
   libssl-dev \
@@ -19,7 +19,7 @@ RUN install2.r --error --skipinstalled \
   stringr \
   htmltools \
   devtools \
-  rintrojs \
+  cicerone \
   purrr \
   jsonlite \
   markdown \

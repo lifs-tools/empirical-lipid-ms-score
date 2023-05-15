@@ -18,7 +18,7 @@ library(DT)
 
 appInfo <- list(
   "application.name"="EPoS-MoL",
-  "application.version"="0.0.1",
+  "application.version"="1.0.0",
   "application.date"=date(),
   "application.authors"="Nils Hoffmann, Harald Köfeler",
   "application.license"="MIT",
@@ -27,6 +27,7 @@ appInfo <- list(
   "application.issues"="https://github.com/lifs-tools/eposmol/issues"
 )
 
+cvMapTable <- loadCvMapTable(path = file.path("inst", "extdata", "shorthand_cv_map.xlsx"))
 scoringTable <- loadScoringTable(path = file.path("inst", "extdata", "Table 1_mod.xlsx"))
 lipidCategoryAndClassMapTable <- loadCategoryAndClassMapTable(path = file.path("inst", "extdata", "class_map.xlsx"))
 lipidClassifications <-
@@ -69,7 +70,7 @@ ui <- function(request) {
   fluidPage(
     includeCSS("R/www/custom.css"),
     useShinyjs(),
-    # introjsUI(),
+    #use_cicerone(),
     titlePanel("EPoS-ML Calculation"),
     sidebarLayout(
       sidebarPanel(
@@ -529,7 +530,7 @@ server <- function(input, output, session) {
 
   observeEvent(input$checkNames, {
     req(values$totalLipidScoresTableData)
-    values$totalLipidScoresTableData <- checkNames(values$totalLipidScoresTableData)
+    values$totalLipidScoresTableData <- checkNames(values$totalLipidScoresTableData, cvMapTable)
   })
 
   # observeEvent(input$help, {

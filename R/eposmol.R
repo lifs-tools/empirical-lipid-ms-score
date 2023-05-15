@@ -21,6 +21,15 @@ loadCategoryAndClassMapTable <- function(path=system.file("..", "inst", "extdata
   lipidCategoryAndClassMap
 }
 
+loadCvMapTable <- function(path=system.file("..", "inst", "extdata", "shorthand_cv_map.xlsx")) {
+  cvMap <- readxl::read_excel(
+    path = path,
+    sheet = "cv_term_map",
+    range = "A1:D11"
+  )
+  cvMap
+}
+
 readLongTable <- function(tble, scoringTable) {
   tble |>
     tidyr::drop_na() |>
@@ -96,7 +105,7 @@ calculateTotalLipidScoresTableData <- function(lipidScoresTableData) {
     dplyr::summarise(TotalScore = sum(Score), ScoreCode = paste0(stringr::str_sort(ID, numeric = T), collapse = ", "))
 }
 
-checkNames <- function(totalLipidScoresTableData) {
+checkNames <- function(totalLipidScoresTableData, cvMapTable) {
   tryCatch(
     {
       goslinResm <-
@@ -112,6 +121,8 @@ checkNames <- function(totalLipidScoresTableData) {
         goslinResm$Lipid.Maps.Main.Class
       totalLipidScoresTableData$Normalized.Name <-
         goslinResm$Normalized.Name
+      totalLipidScoresTableData$Shorthand.Level <- goslinResm$Level
+      totalLipidScoresTableData <- totalLipidScoresTableData |> left_join(cvMapTable |> select(-ShorthandNomenclatureLevel,-CVTermName), by=c("Shorthand.Level"))
       return(totalLipidScoresTableData)
     },
     error = function(cond) {
