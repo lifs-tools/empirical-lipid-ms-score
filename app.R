@@ -20,7 +20,7 @@ library(here)
 
 appInfo <- list(
   "application.name"="EPoS-MoL",
-  "application.version"="1.0.0",
+  "application.version"="0.9.0",
   "application.date"=date(),
   "application.authors"="Nils Hoffmann, Harald Köfeler",
   "application.license"="MIT",
