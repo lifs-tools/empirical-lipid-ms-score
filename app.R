@@ -654,9 +654,9 @@ server <- function(input, output, session) {
   output$applicationDate <- shiny::renderText({appInfo$application.date})
   output$applicationAuthors <- shiny::renderText({appInfo$application.authors})
   output$applicationLicense <- shiny::renderText({appInfo$application.license})
-  output$applicationHomepage <- shiny::renderUI({tags$a(href=appInfo$application.url, appInfo$application.url)})
-  output$imprintAndPrivacyPolicy <- shiny::renderUI({tags$a(href=appInfo$application.imprintAndPrivacyPolicy, appInfo$application.imprintAndPrivacyPolicy)})
-  output$applicationIssues <- shiny::renderUI({tags$a(href=appInfo$application.issues, "Report an issue", class="btn btn-danger")})
+  output$applicationHomepage <- shiny::renderUI({tags$a(href=appInfo$application.url, target="_blank", appInfo$application.url)})
+  output$imprintAndPrivacyPolicy <- shiny::renderUI({tags$a(href=appInfo$application.imprintAndPrivacyPolicy, target="_blank", appInfo$application.imprintAndPrivacyPolicy)})
+  output$applicationIssues <- shiny::renderUI({tags$a(href=appInfo$application.issues, target="_blank", "Report an issue", class="btn btn-danger")})
 
   loadedLibraries <- reactive({
     assemblePackageDescriptions((.packages()))
