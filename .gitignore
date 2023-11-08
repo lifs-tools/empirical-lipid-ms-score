@@ -51,3 +51,5 @@ rsconnect/
 
 # Marker file to load development settings 
 .dev
+
+shiny_bookmarks

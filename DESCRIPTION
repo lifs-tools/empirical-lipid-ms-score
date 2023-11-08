@@ -1,9 +1,9 @@
 Package: eposmol
 Title: EPoS-MOL
-Version: 1.0.0
+Version: 0.9.0
 Authors@R: c(
     person("Nils", "Hoffmann", email = "n.hoffmann@fz-juelich.de", role = c("aut", "cre"), comment = c(ORCID = "0000-0002-6540-6875")),
-    person("Harald", "Köfeler", email = "harald.koefeler@medunigraz.at", role = c("aut), comment = c(ORCID = "0000-0002-2725-9616"))
+    person("Harald", "Köfeler", email = "harald.koefeler@medunigraz.at", role = c("aut"), comment = c(ORCID = "0000-0002-2725-9616"))
   )
 Author: Nils Hoffmann [aut, cre], Harald Köfeler [aut]
 Maintainer: Nils Hoffmann <n.hoffmann@fz-juelich.de>
@@ -29,7 +29,9 @@ Imports:
     jsonlite,
     markdown,
     rgoslin,
-    DT
+    here,
+    DT,
+    knitr
 Suggests:
     testthat,
     shinytest2,

@@ -15,6 +15,8 @@ library(stringr)
 library(htmltools)
 library(rintrojs)
 library(DT)
+library(here)
+#library(knitr)
 
 appInfo <- list(
   "application.name"="EPoS-MoL",
@@ -22,14 +24,14 @@ appInfo <- list(
   "application.date"=date(),
   "application.authors"="Nils Hoffmann, Harald Köfeler",
   "application.license"="MIT",
-  "application.url"="https://github.com/lifs-tools/eposmol",
+  "application.url"="https://github.com/lifs-tools/empirical-lipid-ms-score",
   "application.imprintAndPrivacyPolicy"="https://lifs-tools.org/imprint-privacy-policy.html",
-  "application.issues"="https://github.com/lifs-tools/eposmol/issues"
+  "application.issues"="https://github.com/lifs-tools/empirical-lipid-ms-score/issues"
 )
 
-cvMapTable <- loadCvMapTable(path = file.path("inst", "extdata", "shorthand_cv_map.xlsx"))
-scoringTable <- loadScoringTable(path = file.path("inst", "extdata", "Table 1_mod.xlsx"))
-lipidCategoryAndClassMapTable <- loadCategoryAndClassMapTable(path = file.path("inst", "extdata", "class_map.xlsx"))
+cvMapTable <- loadCvMapTable(path = here("inst", "extdata", "shorthand_cv_map.xlsx"))
+scoringTable <- loadScoringTable(path = here("inst", "extdata", "Table 1.xlsx"))
+lipidCategoryAndClassMapTable <- loadCategoryAndClassMapTable(path = here("inst", "extdata", "class_map.xlsx"))
 lipidClassifications <-
   sort(unique(scoringTable$LipidCategoryOrClass))
 primaryClassifications <- sort(unique(scoringTable$Primary))
@@ -131,7 +133,8 @@ ui <- function(request) {
                   actionButton("reset1", "Reset", class = "btn-danger"),
                   data.step = 5,
                   data.intro = "Click on this button to reset any inputs. This will also remove any intermediate tables generated from your data, so please be careful!"
-                )
+                ),
+                actionButton("loadExample", "Load example data", class = "btn-default", style="float:right"),
               )
             ),
           ),
@@ -287,6 +290,12 @@ ui <- function(request) {
               data.intro = "This tab provides a mapping from LIPID MAPS category and classes to the (super-)classes used by EPoS-MOL."
             )
           ),
+          # tabPanel(
+          #   "Using the EPoS-MoL R Library",
+          #   fluidRow(
+          #     uiOutput('howtoUseMarkdown')
+          #   ),
+          # ),
           tabPanel(
             "About EPoS-MoL",
             introBox(
@@ -357,6 +366,7 @@ ui <- function(request) {
 }
 server <- function(input, output, session) {
   values <- reactiveValues()
+  values$tableFilePath <- NULL
   values$lipidScoresTableData <- lipidScoresTableDataEmpty
   values$tble <- lipidTableDataEmpty
   values$totalLipidScoresTableData <- totalLipidScoresTableDataEmpty
@@ -429,6 +439,7 @@ server <- function(input, output, session) {
     disable("checkNames")
     disable("download")
     disable("loadExcel")
+    values$tableFilePath <- NULL
     values$tble <- lipidTableDataEmpty
     values$lipidScoresTableData <- lipidScoresTableDataEmpty
     values$totalLipidScoresTableData <- totalLipidScoresTableDataEmpty
@@ -439,6 +450,7 @@ server <- function(input, output, session) {
     disable("checkNames")
     disable("download")
     disable("loadExcel")
+    values$tableFilePath <- NULL
     values$tble <- lipidTableDataEmpty
     values$lipidScoresTableData <- lipidScoresTableDataEmpty
     values$totalLipidScoresTableData <- totalLipidScoresTableDataEmpty
@@ -454,9 +466,19 @@ server <- function(input, output, session) {
 
   observeEvent(input$tableFile, {
     enable("loadExcel")
+    values$tableFilePath <- input$tableFile$datapath
     updateSelectInput(session,
       "tableSheet",
-      choices = readxl::excel_sheets(input$tableFile$datapath)
+      choices = readxl::excel_sheets(values$tableFilePath)
+    )
+  })
+
+  observeEvent(input$loadExample, {
+    enable("loadExcel")
+    values$tableFilePath <- here("inst","extdata","Table S2.xlsx")
+    updateSelectInput(session,
+      "tableSheet",
+      choices = readxl::excel_sheets(values$tableFilePath)
     )
   })
 
@@ -467,20 +489,14 @@ server <- function(input, output, session) {
         values$totalLipidScoresTableData <- NA
         tble <-
           readxl::read_excel(
-            input$tableFile$datapath,
+            values$tableFilePath,
             sheet = input$tableSheet,
             col_names = TRUE
           )
         lipidScoresTableData <- lipidScoresTableDataEmpty
         if (input$tableFormat == "long") {
           lipidScoresTableData <- readLongTable(tble, scoringTable)
-          # validate(
-          #   need(try(sum(naScores, na.rm = TRUE)>0), which(naScores==TRUE))
-          # )
         } else {
-          # validate(
-          #   need(!all(requiredColumnsWide %in% names(values$tble)), paste0("Input table must contain column names (case-sensitive): ", paste(requiredColumnsWide, ", "))),
-          # )
           lipidScoresTableData <- readWideTable(tble, scoringTable)
         }
         values$tble <- tble
@@ -582,12 +598,16 @@ server <- function(input, output, session) {
     )
   )
 
-  output$referenceScoreTable <- DT::renderDataTable(scoringTable,
-    options = list(
-      select = "single",
-      scrollX = TRUE
+  output$referenceScoreTable <- DT::renderDataTable({
+    datatable(arrange(scoringTable, LipidCategoryOrClass, ID),
+        extensions = "RowGroup",
+        options = list(
+          select = "single",
+          scrollX = TRUE,
+          rowGroup = list(dataSrc = c(6))
+        )
     )
-  )
+  })
 
   output$lipidCategoryAndClassMapTable <- DT::renderDataTable(lipidCategoryAndClassMapTable,
     options = list(
@@ -601,7 +621,7 @@ server <- function(input, output, session) {
       paste0("EPOS-Mol-Examples", ".xlsx")
     },
     content = function(file) {
-      file.copy(file.path("inst", "extdata", "Table S2.xlsx"), file)
+      file.copy(here("inst", "extdata", "Table S2.xlsx"), file)
     },
     contentType = "application/msexcel"
   )
@@ -624,6 +644,10 @@ server <- function(input, output, session) {
   output$gettingStarted <- renderUI({
     HTML(htmltools::includeMarkdown("R/www/gettingStarted.md"))
   })
+
+  # output$howtoUseMarkdown <- renderUI({
+  #   HTML(markdown::markdownToHTML(knit(here("vignettes","howto-use.Rmd"), quiet = TRUE)))
+  # })
 
   output$applicationName <- shiny::renderText({appInfo$application.name})
   output$applicationVersion <- shiny::renderText({appInfo$application.version})

@@ -1,21 +1,29 @@
 ---
-title: "Examples for Empirical Lipid Point Score for Mass Spectrometry"
-output:
-  html_document: default
-  pdf_document: default
+title: "How to use EPos-MoL"
+author: "Nils Hoffmann"
+date: "`r Sys.Date()`"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Vignette Title}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
 ---
 
-
-```{r, echo=FALSE}
-renv::install(c("tidyverse","readxl","lifs-tools/rgoslin"))
+```{r setup, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+renv::install(c("tidyverse","readxl","lifs-tools/rgoslin","here"))
 library(tidyverse)
 library(readxl)
 library(rgoslin)
+library(here)
 ```
 
 ```{r, echo=TRUE}
 scoringScheme <- read_excel(
-  path = file.path("data", "Table 1_mod.xlsx"),
+  path = here("inst","extdata","Table 1.xlsx"),
   sheet = "Scoring scheme", 
   range = "A1:X30"
 )
@@ -24,7 +32,7 @@ scoringScheme <- read_excel(
 ```{r}
 scoringSchemeLong <- scoringScheme %>% 
   pivot_longer(
-    cols=!Primary:Evidence, 
+    cols=!Primary:ID, 
     names_to = "lipidClassification"
   )
 scoringSchemeLong
@@ -80,6 +88,8 @@ score <- sum(
 score
 ```
 ## Example b
+
+Example b assigns points for identification of a Ceramide with one long chain base and a fatty acyl, both with 18 carbon atoms and one double bond each. Identification was performed in positive and negative mode on a low resolution QTrap instrument, without prior separation. We thus assign points for nominal mass accuracy in positive and negative mode, additional CID fragments for MS2 in both modes and the primary fatty acyl fragment for negative mode.
 
 |               |                     |
 | ------------- | ------------------- |

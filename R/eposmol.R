@@ -1,4 +1,4 @@
-loadScoringTable <- function(path=system.file("..", "inst", "extdata", "Table 1_mod.xlsx")) {
+loadScoringTable <- function(path=system.file("..", "inst", "extdata", "Table 1.xlsx")) {
   scoringScheme <- readxl::read_excel(
     path = path,
     sheet = "Scoring scheme",
@@ -86,7 +86,7 @@ addRowManually <- function(lipidScoresTableData, lipidName, lipidCategoryOrClass
 readManualTable <- function(tble, scoringTable) {
   tble |>
     dplyr::ungroup() |>
-    dplyr::select(-dplyr::any_of(c('ID', 'Primary', 'Secondary', 'Fragment'))) |>
+    dplyr::select(-dplyr::any_of(c('ID', 'Primary', 'Secondary', 'Fragment', 'maxScore'))) |>
     dplyr::left_join(
       scoringTable,
       by = c(
@@ -102,7 +102,7 @@ readManualTable <- function(tble, scoringTable) {
 calculateTotalLipidScoresTableData <- function(lipidScoresTableData) {
   lipidScoresTableData |>
     dplyr::group_by(Name, LipidCategoryOrClass) |>
-    dplyr::summarise(TotalScore = sum(Score), ScoreCode = paste0(stringr::str_sort(ID, numeric = T), collapse = ", "))
+    dplyr::summarise(TotalScore = sum(Score), ScoreCode = paste0(stringr::str_sort(paste0(ID,IonMode,collapse=", "), numeric = T)))
 }
 
 checkNames <- function(totalLipidScoresTableData, cvMapTable) {
@@ -122,7 +122,17 @@ checkNames <- function(totalLipidScoresTableData, cvMapTable) {
       totalLipidScoresTableData$Normalized.Name <-
         goslinResm$Normalized.Name
       totalLipidScoresTableData$Shorthand.Level <- goslinResm$Level
-      totalLipidScoresTableData <- totalLipidScoresTableData |> left_join(cvMapTable |> select(-ShorthandNomenclatureLevel,-CVTermName), by=c("Shorthand.Level"))
+      totalLipidScoresTableData$Species.Name <-
+        goslinResm$Species.Name
+      totalLipidScoresTableData$Molecular.Species.Name <-
+        goslinResm$Molecular.Species.Name
+      totalLipidScoresTableData$Sn.Position.Name <-
+        goslinResm$Sn.Position.Name
+      totalLipidScoresTableData$Structure.Defined.Name <-
+        goslinResm$Structure.Defined.Name
+      totalLipidScoresTableData$Full.Structure.Name <-
+        goslinResm$Full.Structure.Name
+      totalLipidScoresTableData <- totalLipidScoresTableData |> left_join(cvMapTable |> select(-ShorthandNomenclatureLevel,-CVTermName), by=c("Shorthand.Level")) |> rename(Shorthand.Level.CvTerm=CVTerm)
       return(totalLipidScoresTableData)
     },
     error = function(cond) {

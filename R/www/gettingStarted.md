@@ -10,7 +10,7 @@ If you use EPoS-MoL, please cite the following publication:
 
 ** TODO Publication **
 
-More information and support for EPoS-ML is available at https://github.com/lifs-tools/eposmol
+More information and support for EPoS-ML is available at https://github.com/lifs-tools/empirical-lipid-ms-score
 
 ## EPoS-MoL Webapplication
 
@@ -21,7 +21,7 @@ This web application provides a sample spreadsheet file containing two examples 
 EPoS-MoL supports upload of identification data in one of the two formats contained in the sample spreadsheet. 
 
 1. Select the 'Upload' tab.
-2. Click on 'Browse' to select a spreadsheet file from your local computer.
+2. Click on 'Browse' to select a spreadsheet file from your local computer or click on 'Load example data' to load the provided example data.
 3. After selection, the file will be inspected for available data sheets.
 4. Select the sheet containing your data from the 'Select the sheet to load' drop-down menu.
 5. Pick the right table format from the 'Select the table format' drop-down menu.
@@ -69,8 +69,8 @@ The result spreadsheet will contain two sheets:
 1. Total Scores and
 2. Individual Scores
 
-*Total Scores* will contain the columns *Name*,	*LipidCategoryOrClass*,	*TotalScore*, and 	*ScoreCode*. It will contain one row per unique lipid name and LipidCategoryOrClass entry.
-The *TotalScore* column will contain the sum of the individual point score contributions, whose identities are provided in the *ScoreCode* column.
+*Total Scores* will contain the columns *Name*,	*LipidCategoryOrClass*,	*TotalScore*, and *ScoreCode*. It will contain one row per unique lipid name and LipidCategoryOrClass entry.
+The *TotalScore* column will contain the sum of the individual point score contributions, whose identities for positive and negative ion mode are provided in the *ScoreCode* column.
 
 If you choose to check the lipid names, the Goslin library will attempt to parse your lipid names. The resulting columns will be joined to the total scores table, reporting LIPID MAPS Category (*Lipid.Maps.Category*) and Main Class (*Lipid.Maps.Main.Class*), along with the normalized lipid shorthand name (*Normalized.Name*). If parsing fails, 'Unrecognised shorthand name' in the *Message* column will indicate it.
 
@@ -87,6 +87,8 @@ The table will consist of the following columns:
 - Fragment (the fragment abbreviation, if applicable)
 - ID (a unique ID for the feature coordinate)
 - Score (the point score of the feature)
+
+Additionally, if you run Goslin the output may contain a column *Shorthand.Level.CvTerm* that will contain the controlled vocabulary term for the shorthand lipid name level as returned by Goslin. See [PSI-MS](https://www.ebi.ac.uk/ols4/ontologies/ms) for more details.
 
 ## Input Data Format - Mandatory column names
 

@@ -9,7 +9,7 @@ test_that("loadCvMapTable works", {
 })
 
 test_that("loadScoringTable works", {
-  scoringTable <- loadScoringTable(path=file.path("..","..","inst","extdata","Table 1_mod.xlsx"))
+  scoringTable <- loadScoringTable(path=file.path("..","..","inst","extdata","Table 1.xlsx"))
   expect_equal(nrow(scoringTable), 609)
   expect_equal(ncol(scoringTable), 7)
 })
@@ -20,7 +20,7 @@ test_that("loadCategoryAndClassMapTable works", {
 })
 
 test_that("readLongTable works", {
-  scoringTable <- loadScoringTable(path=file.path("..","..","inst","extdata","Table 1_mod.xlsx"))
+  scoringTable <- loadScoringTable(path=file.path("..","..","inst","extdata","Table 1.xlsx"))
   tbleLong <- openxlsx::read.xlsx(file.path("..","..","inst","extdata","Table S2.xlsx"), sheet = "Long Format")
   expect_equal(nrow(tbleLong), 33)
   expect_equal(ncol(tbleLong), 5)
@@ -30,7 +30,7 @@ test_that("readLongTable works", {
 })
 
 test_that("readWideTable works", {
-  scoringTable <- loadScoringTable(path=file.path("..","..","inst","extdata","Table 1_mod.xlsx"))
+  scoringTable <- loadScoringTable(path=file.path("..","..","inst","extdata","Table 1.xlsx"))
   tbleWide <- openxlsx::read.xlsx(file.path("..","..","inst","extdata","Table S2.xlsx"), sheet = "Wide Format")
   expect_equal(nrow(tbleWide), 7)
   expect_equal(ncol(tbleWide), 32)
@@ -61,14 +61,14 @@ test_that("addRowManually empty works", {
   expect_equal(nrow(tbleAddedResult), 1)
   expect_equal(ncol(tbleAddedResult), 6)
 
-  scoringTable <- loadScoringTable(path=file.path("..","..","inst","extdata","Table 1_mod.xlsx"))
+  scoringTable <- loadScoringTable(path=file.path("..","..","inst","extdata","Table 1.xlsx"))
   manualTable <- readManualTable(tbleAddedResult, scoringTable)
   expect_equal(nrow(manualTable), 1)
   expect_equal(ncol(manualTable), 11)
 })
 
 test_that("addRowManually existing works", {
-  scoringTable <- loadScoringTable(path=file.path("..","..","inst","extdata","Table 1_mod.xlsx"))
+  scoringTable <- loadScoringTable(path=file.path("..","..","inst","extdata","Table 1.xlsx"))
   tbleWide <- openxlsx::read.xlsx(file.path("..","..","inst","extdata","Table S2.xlsx"), sheet = "Wide Format")
   expect_equal(nrow(tbleWide), 7)
   expect_equal(ncol(tbleWide), 32)
@@ -92,7 +92,7 @@ test_that("addRowManually existing works", {
 })
 
 test_that("calculateTotalLipidScoresTableData works", {
-  scoringTable <- loadScoringTable(path=file.path("..","..","inst","extdata","Table 1_mod.xlsx"))
+  scoringTable <- loadScoringTable(path=file.path("..","..","inst","extdata","Table 1.xlsx"))
   tbleLong <- openxlsx::read.xlsx(file.path("..","..","inst","extdata","Table S2.xlsx"), sheet = "Long Format")
   tbleResult <- readLongTable(tbleLong, scoringTable)
   totalLipidScoresTableData <- calculateTotalLipidScoresTableData(tbleResult)
@@ -109,7 +109,7 @@ test_that("calculateTotalLipidScoresTableData works", {
 })
 
 test_that("checkNames works", {
-  scoringTable <- loadScoringTable(path=file.path("..","..","inst","extdata","Table 1_mod.xlsx"))
+  scoringTable <- loadScoringTable(path=file.path("..","..","inst","extdata","Table 1.xlsx"))
   cvMapTable <- loadCvMapTable(path = file.path("..","..","inst", "extdata", "shorthand_cv_map.xlsx"))
   tbleLong <- openxlsx::read.xlsx(file.path("..","..","inst","extdata","Table S2.xlsx"), sheet = "Long Format")
   tbleResult <- readLongTable(tbleLong, scoringTable)
