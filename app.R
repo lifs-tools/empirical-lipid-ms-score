@@ -13,14 +13,14 @@ library(dplyr)
 library(tidyr)
 library(stringr)
 library(htmltools)
-#library(rintrojs)
+library(rintrojs)
 library(DT)
 library(here)
 #library(knitr)
 
 appInfo <- list(
   "application.name"="EPoS-MoL",
-  "application.version"="0.9.0",
+  "application.version"="0.9.1",
   "application.date"=date(),
   "application.authors"="Nils Hoffmann, Harald Köfeler",
   "application.license"="MIT",
