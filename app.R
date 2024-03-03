@@ -73,7 +73,7 @@ ui <- function(request) {
     includeCSS("R/www/custom.css"),
     useShinyjs(),
     #use_cicerone(),
-    titlePanel("EPoS-ML Calculation"),
+    titlePanel("EPoS-MoL Calculation"),
     sidebarLayout(
       sidebarPanel(
         # actionButton("help", icon=icon("question"), class="btn-info", label="Start Tour"),
