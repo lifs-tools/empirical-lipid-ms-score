@@ -19,6 +19,36 @@
     <loc>/index.html</loc>
   </url>
   <url>
+    <loc>/reference/addRowManually.html</loc>
+  </url>
+  <url>
+    <loc>/reference/calculateTotalLipidScoresTableData.html</loc>
+  </url>
+  <url>
+    <loc>/reference/checkNames.html</loc>
+  </url>
+  <url>
+    <loc>/reference/eposmol.html</loc>
+  </url>
+  <url>
     <loc>/reference/index.html</loc>
+  </url>
+  <url>
+    <loc>/reference/loadCategoryAndClassMapTable.html</loc>
+  </url>
+  <url>
+    <loc>/reference/loadCvMapTable.html</loc>
+  </url>
+  <url>
+    <loc>/reference/loadScoringTable.html</loc>
+  </url>
+  <url>
+    <loc>/reference/readLongTable.html</loc>
+  </url>
+  <url>
+    <loc>/reference/readManualTable.html</loc>
+  </url>
+  <url>
+    <loc>/reference/readWideTable.html</loc>
   </url>
 </urlset>
