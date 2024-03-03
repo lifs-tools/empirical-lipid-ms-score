@@ -16,6 +16,20 @@ If you want to install a particular release version, use the following command:
 
 in this case for the tag version v0.9.0
 
+## Using the package
+
+Please see the package vignette for a detailed description of the package functionality.
+
+```vignette("eposmol", package = "eposmol")```
+
+Documentation is also available at [https://lifs-tools.github.io/empirical-lipid-ms-score/](https://lifs-tools.github.io/empirical-lipid-ms-score/)
+
+## Accessing the Shiny Webapp
+
+The EpOs-MoL Shiny app can be accessed at the following URL:
+
+```https://apps.lifs-tools.org/p/app/eposmol```
+
 ## Running the app from RStudio
 
 In order to load the packages, without the need to build and install it:

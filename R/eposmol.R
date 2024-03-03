@@ -1,4 +1,9 @@
-
+#' Load the scoring scheme table.
+#' @importFrom readxl read_excel
+#' @importFrom tidyr pivot_longer
+#' @param path The path to the scoring scheme table.
+#' @returns A tibble with the scoring scheme table.
+#' @export
 loadScoringTable <- function(path=system.file("..", "inst", "extdata", "Table 1.xlsx")) {
   scoringScheme <- readxl::read_excel(
     path = path,
@@ -13,6 +18,11 @@ loadScoringTable <- function(path=system.file("..", "inst", "extdata", "Table 1.
   scoringSchemeLong
 }
 
+#' Load the category and class map table.
+#' @importFrom readxl read_excel
+#' @param path The path to the category and class map table.
+#' @returns A tibble with the category and class map table.
+#' @export
 loadCategoryAndClassMapTable <- function(path=system.file("..", "inst", "extdata", "class_map.xlsx")) {
   lipidCategoryAndClassMap <- readxl::read_excel(
     path = path,
@@ -22,6 +32,11 @@ loadCategoryAndClassMapTable <- function(path=system.file("..", "inst", "extdata
   lipidCategoryAndClassMap
 }
 
+#' Load the shorthand CV map table.
+#' @importFrom readxl read_excel
+#' @param path The path to the shorthand CV map table.
+#' @returns A tibble with the shorthand CV map table.
+#' @export
 loadCvMapTable <- function(path=system.file("..", "inst", "extdata", "shorthand_cv_map.xlsx")) {
   cvMap <- readxl::read_excel(
     path = path,
@@ -31,6 +46,13 @@ loadCvMapTable <- function(path=system.file("..", "inst", "extdata", "shorthand_
   cvMap
 }
 
+#' Read a long format table and join with the features defined in the scoring table. The long format table must have the following columns: Name, LipidCategoryOrClass, IonMode, Feature, Value.
+#' @importFrom dplyr left_join rename distinct arrange
+#' @importFrom tidyr drop_na
+#' @param tble The long format table.
+#' @param scoringTable The scoring table.
+#' @returns A tibble with the long format table.
+#' @export
 readLongTable <- function(tble, scoringTable) {
   tble |>
     tidyr::drop_na() |>
@@ -46,6 +68,13 @@ readLongTable <- function(tble, scoringTable) {
     dplyr::arrange(.by_group = TRUE)
 }
 
+#' Read a wide format table and join with the features defined in the scoring table. The wide format table must have the following columns: Name, LipidCategoryOrClass, IonMode, and the features as columns.
+#' @importFrom dplyr group_by left_join rename distinct arrange
+#' @importFrom tidyr pivot_longer drop_na
+#' @param tble The wide format table.
+#' @param scoringTable The scoring table.
+#' @returns A tibble with the wide format table.
+#' @export
 readWideTable <- function(tble, scoringTable) {
   tble |>
     dplyr::group_by(Name, LipidCategoryOrClass, IonMode) |>
@@ -70,6 +99,16 @@ readWideTable <- function(tble, scoringTable) {
     dplyr::arrange(.by_group = TRUE)
 }
 
+#' Add a result row manually to the lipidScoresTableData tibble.
+#' @importFrom dplyr add_row ungroup group_by
+#' @param lipidScoresTableData The lipidScoresTableData tibble.
+#' @param lipidName The lipid name.
+#' @param lipidCategoryOrClass The lipid category or class.
+#' @param ionMode The ion mode.
+#' @param evidenceClassification The evidence classification.
+#' @param evidenceScore The evidence score.
+#' @returns A tibble with the added row.
+#' @export
 addRowManually <- function(lipidScoresTableData, lipidName, lipidCategoryOrClass, ionMode, evidenceClassification, evidenceScore) {
   lipidScoresTableData |>
     dplyr::ungroup() |>
@@ -84,6 +123,12 @@ addRowManually <- function(lipidScoresTableData, lipidName, lipidCategoryOrClass
     dplyr::group_by(Name, LipidCategoryOrClass, IonMode)
 }
 
+#' Read the manual table and join with the features defined in the scoring table. The manual table must have the following columns: Name, LipidCategoryOrClass, IonMode, Feature, Value.
+#' @importFrom dplyr left_join group_by distinct arrange ungroup select any_of
+#' @param tble The manual table.
+#' @param scoringTable The scoring table.
+#' @returns A tibble with the manual table data.
+#' @export
 readManualTable <- function(tble, scoringTable) {
   tble |>
     dplyr::ungroup() |>
@@ -100,12 +145,26 @@ readManualTable <- function(tble, scoringTable) {
     dplyr::arrange(.by_group = TRUE)
 }
 
+#' Calculate the total lipid scores table data.
+#' @importFrom dplyr group_by summarise
+#' @importFrom stringr str_sort
+#' @param lipidScoresTableData The lipid scores table data.
+#' @returns A tibble with the total lipid scores table data.
+#' @export
 calculateTotalLipidScoresTableData <- function(lipidScoresTableData) {
   lipidScoresTableData |>
     dplyr::group_by(Name, LipidCategoryOrClass) |>
     dplyr::summarise(TotalScore = sum(Score), ScoreCode = paste0(stringr::str_sort(paste0(ID,IonMode,collapse=", "), numeric = T)))
 }
 
+#' Check if the lipid names are valid shorthand names using the rgoslin package.
+#' @importFrom dplyr left_join rename
+#' @importFrom purrr map_df keep
+#' @importFrom rgoslin parseLipidNames
+#' @param totalLipidScoresTableData The total lipid scores table data.
+#' @param cvMapTable The shorthand CV map table.
+#' @returns A tibble with the total lipid scores table data, joined with rgoslin parsing results.
+#' @export
 checkNames <- function(totalLipidScoresTableData, cvMapTable) {
   tryCatch(
     {
