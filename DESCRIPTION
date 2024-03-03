@@ -36,6 +36,7 @@ Suggests:
     testthat,
     shinytest2,
     diffviewer,
-    pkgdown
+    pkgdown,
+    devtools
 RoxygenNote: 7.2.3
 VignetteBuilder: knitr

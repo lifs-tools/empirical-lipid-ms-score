@@ -1,3 +1,4 @@
+
 loadScoringTable <- function(path=system.file("..", "inst", "extdata", "Table 1.xlsx")) {
   scoringScheme <- readxl::read_excel(
     path = path,
