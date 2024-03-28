@@ -1,0 +1,10 @@
+# ignore files and directories we do not need in the docker image
+renv
+renv.lock
+man
+.git
+.cache
+.github
+.Rproj.user
+.Rhistory
+.Rprofile
