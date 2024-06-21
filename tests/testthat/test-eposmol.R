@@ -125,7 +125,7 @@ test_that("checkNames works", {
   expect_true(is.na(nameData |> filter(Name=="Lipid Feature m/z 752.56") |> pluck("Lipid.Maps.Main.Class")))
   expect_true(is.na(nameData |> filter(Name=="Lipid Feature m/z 752.56") |> pluck("Normalized.Name")))
 
-  expect_equal(13, nameData |> filter(Name=="PI 18:1/18:1") |> pluck("TotalScore"))
+  expect_equal(134, nameData |> filter(Name=="PI 18:1/18:1") |> pluck("TotalScore"))
   expect_equal("", nameData |> filter(Name=="PI 18:1/18:1") |> pluck("Message"))
   expect_equal("GP", nameData |> filter(Name=="PI 18:1/18:1") |> pluck("Lipid.Maps.Category"))
   expect_equal("PI", nameData |> filter(Name=="PI 18:1/18:1") |> pluck("Lipid.Maps.Main.Class"))

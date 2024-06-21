@@ -676,6 +676,18 @@
       ],
       "Hash": "a1004308078387cdf83c2e8fd5283c3e"
     },
+    "rintrojs": {
+      "Package": "rintrojs",
+      "Version": "0.3.4",
+      "Source": "Repository",
+      "Repository": "CRAN",
+      "Requirements": [
+        "R",
+        "jsonlite",
+        "shiny"
+      ],
+      "Hash": "e01800bef019328509364ab655fbcca6"
+    },
     "rlang": {
       "Package": "rlang",
       "Version": "1.1.3",

@@ -29,6 +29,7 @@ Imports:
     jsonlite,
     markdown,
     rgoslin,
+    rintrojs,
     here,
     DT,
     knitr
