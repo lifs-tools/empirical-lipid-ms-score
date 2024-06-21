@@ -12,9 +12,9 @@ The package can be installed from GitHub using the following command:
 
 If you want to install a particular release version, use the following command:
 
-```devtools::install_github("lifs-tools/empirical-lipid-ms-score@v0.9.0")```
+```devtools::install_github("lifs-tools/empirical-lipid-ms-score@v0.9.9")```
 
-in this case for the tag version v0.9.0
+in this case for the tag version v0.9.9
 
 ## Using the package
 
@@ -45,6 +45,10 @@ You can then use the regular "Run App" button within RStudio to launch the Shiny
 The Docker image can be built using the following command:
 
 ```docker build -t eposmol .```
+
+If you use buildx, you will need to instruct the image builder to load the created image into the local docker:
+
+```docker build --load -t eposmol .```
 
 ## Running the Docker image
 

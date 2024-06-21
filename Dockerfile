@@ -1,6 +1,5 @@
-FROM rhub/r-minimal:4.3
+FROM rhub/r-minimal:4.4
 ARG TARGETARCH
-
 # install development stack, libraries and R packages
 RUN installr -d -e \
   -a "cairo font-liberation git libcurl libgit2 libxml2 fontconfig fribidi harfbuzz freetype libpng tiff libjpeg icu-libs zlib" \
@@ -22,9 +21,7 @@ RUN installr -d -e \
   rintrojs \
   here \
   knitr \
-  lifs-tools/rgoslin@alpine-linux
-  # \
-  #rgoslin
+  bioc::rgoslin
 # add a user called shiny and create a directory for the application
 RUN adduser -D shiny && mkdir -p /app && chown shiny.shiny /app && chmod 755 /app
 USER shiny

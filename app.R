@@ -20,7 +20,7 @@ library(here)
 
 appInfo <- list(
   "application.name"="EPoS-MoL",
-  "application.version"="0.9.1",
+  "application.version"="0.9.9",
   "application.date"=date(),
   "application.authors"="Nils Hoffmann, Harald Köfeler",
   "application.license"="MIT",
@@ -195,7 +195,7 @@ ui <- function(request) {
           data.step = 6,
           data.intro = "Click here to download an example lipid annotation dataset. The file contains to sheets for the wide and long format."
         ),
-        bookmarkButton(style="display:inline-block;float: right"),
+        # bookmarkButton(style="display:inline-block;float: right"),
       ),
       mainPanel(
         tabsetPanel(
@@ -220,7 +220,7 @@ ui <- function(request) {
                     style="display: inline-block;",
                     disabled(actionButton(
                       "checkNames",
-                      "Check Lipid Names",
+                      "Parse & Convert Lipid Names",
                       class = "btn-success",
                       icon = icon("check")
                     )),
@@ -290,12 +290,14 @@ ui <- function(request) {
               data.intro = "This tab provides a mapping from LIPID MAPS category and classes to the (super-)classes used by EPoS-MOL."
             )
           ),
-          # tabPanel(
-          #   "Using the EPoS-MoL R Library",
-          #   fluidRow(
-          #     uiOutput('howtoUseMarkdown')
-          #   ),
-          # ),
+          tabPanel(
+            "Using the EPoS-MoL",
+            introBox(
+              uiOutput("usingEposmol"),
+              data.step = 15,
+              data.intro = "This tab provides an overview of how to use the EPoS-MOL application and the data formats used."
+            )
+          ),
           tabPanel(
             "About EPoS-MoL",
             introBox(
@@ -645,6 +647,10 @@ server <- function(input, output, session) {
     HTML(htmltools::includeMarkdown("R/www/gettingStarted.md"))
   })
 
+  output$usingEposmol <-  renderUI({
+    HTML(htmltools::includeMarkdown("R/www/usingEposmol.md"))
+  })
+
   # output$howtoUseMarkdown <- renderUI({
   #   HTML(markdown::markdownToHTML(knit(here("vignettes","howto-use.Rmd"), quiet = TRUE)))
   # })
@@ -673,22 +679,22 @@ server <- function(input, output, session) {
     escape = FALSE
   )
 
-  # Save extra values in state$values when we bookmark
-  onBookmark(function(state) {
-    state$values$tble <- values$tble
-    state$values$totalLipidScoresTableData <-
-      values$totalLipidScoresTableData
-    state$values$lipidScoresTableData <- values$lipidScoresTableData
-  })
-
-  # Read values from state$values when we restore
-  onRestore(function(state) {
-    values <- reactiveValues()
-    values$tble <- state$values$tble
-    values$totalLipidScoresTableData <-
-      state$values$totalLipidScoresTableData
-    values$lipidScoresTableData <- state$values$lipidScoresTableData
-  })
+  # # Save extra values in state$values when we bookmark
+  # onBookmark(function(state) {
+  #   state$values$tble <- values$tble
+  #   state$values$totalLipidScoresTableData <-
+  #     values$totalLipidScoresTableData
+  #   state$values$lipidScoresTableData <- values$lipidScoresTableData
+  # })
+  #
+  # # Read values from state$values when we restore
+  # onRestore(function(state) {
+  #   values <- reactiveValues()
+  #   values$tble <- state$values$tble
+  #   values$totalLipidScoresTableData <-
+  #     state$values$totalLipidScoresTableData
+  #   values$lipidScoresTableData <- state$values$lipidScoresTableData
+  # })
 }
 
 devOptions <- options(
@@ -711,7 +717,7 @@ if (file.exists(".dev")) {
 shinyApp <- shinyApp(
   ui = ui,
   server = server,
-  enableBookmarking = "server",
+  # enableBookmarking = "server",
   options = shinyOptions
 )
 return(shinyApp)
