@@ -57,3 +57,13 @@ The Docker image can be run using the following command:
 ```docker run -p 3838:3838 eposmol```
 
 The Shiny app will then be available at http://localhost:3838/eposmol/
+
+Alternatively, you can use the provided compose file to automatically sync local changes during development to the RShiny application. You will need to reload your browser for changes to become effective:
+
+```./run.sh```
+
+Or use docker compose directly:
+
+```docker compose -f docker-compose-eposmol.yml up --watch```
+
+The Shiny app will then be available at http://localhost:3838/eposmol/
