@@ -1,7 +1,7 @@
 pandoc: 3.1.11
-pkgdown: 2.0.7
+pkgdown: 2.0.9
 pkgdown_sha: ~
 articles:
   howto-use: howto-use.html
-last_built: 2024-03-28T14:05Z
+last_built: 2024-06-21T18:51Z
 
