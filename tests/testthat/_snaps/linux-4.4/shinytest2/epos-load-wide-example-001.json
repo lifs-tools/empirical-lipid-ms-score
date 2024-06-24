@@ -18,7 +18,66 @@
     "sidebarPanels": "Upload",
     "tableFile": null,
     "tableFormat": "wide",
-    "tableSheet": "Wide Format"
+    "tableSheet": "Wide Format",
+    "totalLipidEvidenceScoreTable_cell_clicked": {
+
+    },
+    "totalLipidEvidenceScoreTable_cells_selected": [
+
+    ],
+    "totalLipidEvidenceScoreTable_columns_selected": null,
+    "totalLipidEvidenceScoreTable_rows_all": [
+      1,
+      2,
+      3,
+      4,
+      5,
+      6
+    ],
+    "totalLipidEvidenceScoreTable_rows_current": [
+      1,
+      2,
+      3,
+      4,
+      5,
+      6
+    ],
+    "totalLipidEvidenceScoreTable_rows_selected": null,
+    "totalLipidEvidenceScoreTable_search": "",
+    "totalLipidEvidenceScoreTable_state": [
+      "1719255275564",
+      "0",
+      "10",
+      "",
+      "TRUE",
+      "FALSE",
+      "TRUE",
+      "TRUE",
+      "",
+      "TRUE",
+      "FALSE",
+      "TRUE",
+      "TRUE",
+      "",
+      "TRUE",
+      "FALSE",
+      "TRUE",
+      "TRUE",
+      "",
+      "TRUE",
+      "FALSE",
+      "TRUE",
+      "TRUE",
+      "",
+      "TRUE",
+      "FALSE",
+      "TRUE",
+      "TRUE",
+      "",
+      "TRUE",
+      "FALSE",
+      "TRUE"
+    ]
   },
   "output": {
     "gettingStarted": {

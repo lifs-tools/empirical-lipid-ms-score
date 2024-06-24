@@ -4,3 +4,5 @@
 ^\.Rproj\.user$
 ^\.dev
 ^\.github$
+^app.R$
+_\.new\.png$

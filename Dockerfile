@@ -21,6 +21,7 @@ RUN installr -d -e \
   rintrojs \
   here \
   knitr \
+  pkgload \
   bioc::rgoslin
 # add a user called shiny and create a directory for the application
 RUN adduser -D shiny && mkdir -p /app && chown shiny.shiny /app && chmod 755 /app

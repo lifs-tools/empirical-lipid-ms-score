@@ -1,40 +1,39 @@
 library(purrr)
 library(dplyr)
-source("../../R/eposmol.R")
 
 test_that("loadCvMapTable works", {
-  cvMapTable <- loadCvMapTable(path = file.path("..","..","inst", "extdata", "shorthand_cv_map.xlsx"))
+  cvMapTable <- eposmol::loadCvMapTable(path=system.file("extdata", "shorthand_cv_map.xlsx", package="eposmol"))
   expect_equal(nrow(cvMapTable), 10)
   expect_equal(ncol(cvMapTable), 4)
 })
 
 test_that("loadScoringTable works", {
-  scoringTable <- loadScoringTable(path=file.path("..","..","inst","extdata","Table 1.xlsx"))
+  scoringTable <- eposmol::loadScoringTable(path=system.file("extdata","Table 1.xlsx", package="eposmol"))
   expect_equal(nrow(scoringTable), 609)
   expect_equal(ncol(scoringTable), 7)
 })
 
 test_that("loadCategoryAndClassMapTable works", {
-  scoringTable <- loadCategoryAndClassMapTable(path=file.path("..","..","inst","extdata","class_map.xlsx"))
+  scoringTable <- eposmol::loadCategoryAndClassMapTable(path=system.file("extdata","class_map.xlsx", package="eposmol"))
   expect_equal(nrow(scoringTable), 87)
 })
 
 test_that("readLongTable works", {
-  scoringTable <- loadScoringTable(path=file.path("..","..","inst","extdata","Table 1.xlsx"))
-  tbleLong <- openxlsx::read.xlsx(file.path("..","..","inst","extdata","Table S2.xlsx"), sheet = "Long Format")
+  scoringTable <- eposmol::loadScoringTable(path=system.file("extdata","Table 1.xlsx", package="eposmol"))
+  tbleLong <- openxlsx::read.xlsx(system.file("extdata","Table S2.xlsx", package="eposmol"), sheet = "Long Format")
   expect_equal(nrow(tbleLong), 33)
   expect_equal(ncol(tbleLong), 5)
-  tbleResult <- readLongTable(tbleLong, scoringTable)
+  tbleResult <- eposmol::readLongTable(tbleLong, scoringTable)
   expect_equal(nrow(tbleResult), 33)
   expect_equal(ncol(tbleResult), 10)
 })
 
 test_that("readWideTable works", {
-  scoringTable <- loadScoringTable(path=file.path("..","..","inst","extdata","Table 1.xlsx"))
-  tbleWide <- openxlsx::read.xlsx(file.path("..","..","inst","extdata","Table S2.xlsx"), sheet = "Wide Format")
+  scoringTable <- eposmol::loadScoringTable(path=system.file("extdata","Table 1.xlsx", package="eposmol"))
+  tbleWide <- openxlsx::read.xlsx(system.file("extdata","Table S2.xlsx", package="eposmol"), sheet = "Wide Format")
   expect_equal(nrow(tbleWide), 7)
   expect_equal(ncol(tbleWide), 32)
-  tbleResult <- readWideTable(tbleWide, scoringTable)
+  tbleResult <- eposmol::readWideTable(tbleWide, scoringTable)
   expect_equal(nrow(tbleResult), 33)
   expect_equal(ncol(tbleResult), 10)
 })
@@ -50,7 +49,7 @@ test_that("addRowManually empty works", {
   )
   expect_equal(nrow(emptyTble), 0)
   expect_equal(ncol(emptyTble), 6)
-  tbleAddedResult <- addRowManually(
+  tbleAddedResult <- eposmol::addRowManually(
     emptyTble,
     lipidName = "Cer 18:1;O2/16:0",
     lipidCategoryOrClass = "SP",
@@ -61,21 +60,21 @@ test_that("addRowManually empty works", {
   expect_equal(nrow(tbleAddedResult), 1)
   expect_equal(ncol(tbleAddedResult), 6)
 
-  scoringTable <- loadScoringTable(path=file.path("..","..","inst","extdata","Table 1.xlsx"))
-  manualTable <- readManualTable(tbleAddedResult, scoringTable)
+  scoringTable <- eposmol::loadScoringTable(path=system.file("extdata","Table 1.xlsx", package="eposmol"))
+  manualTable <- eposmol::readManualTable(tbleAddedResult, scoringTable)
   expect_equal(nrow(manualTable), 1)
   expect_equal(ncol(manualTable), 11)
 })
 
 test_that("addRowManually existing works", {
-  scoringTable <- loadScoringTable(path=file.path("..","..","inst","extdata","Table 1.xlsx"))
-  tbleWide <- openxlsx::read.xlsx(file.path("..","..","inst","extdata","Table S2.xlsx"), sheet = "Wide Format")
+  scoringTable <- eposmol::loadScoringTable(path=system.file("extdata","Table 1.xlsx", package="eposmol"))
+  tbleWide <- openxlsx::read.xlsx(system.file("extdata","Table S2.xlsx", package="eposmol"), sheet = "Wide Format")
   expect_equal(nrow(tbleWide), 7)
   expect_equal(ncol(tbleWide), 32)
-  tbleResult <- readWideTable(tbleWide, scoringTable)
+  tbleResult <- eposmol::readWideTable(tbleWide, scoringTable)
   expect_equal(nrow(tbleResult), 33)
   expect_equal(ncol(tbleResult), 10)
-  tbleAddedResult <- addRowManually(
+  tbleAddedResult <- eposmol::addRowManually(
     tbleResult,
     lipidName = "Cer 18:1;O2/16:0",
     lipidCategoryOrClass = "SP",
@@ -86,16 +85,16 @@ test_that("addRowManually existing works", {
   expect_equal(nrow(tbleAddedResult), 34)
   expect_equal(ncol(tbleAddedResult), 10)
 
-  manualTable <- readManualTable(tbleAddedResult, scoringTable)
+  manualTable <- eposmol::readManualTable(tbleAddedResult, scoringTable)
   expect_equal(nrow(manualTable), 34)
   expect_equal(ncol(manualTable), 11)
 })
 
 test_that("calculateTotalLipidScoresTableData works", {
-  scoringTable <- loadScoringTable(path=file.path("..","..","inst","extdata","Table 1.xlsx"))
-  tbleLong <- openxlsx::read.xlsx(file.path("..","..","inst","extdata","Table S2.xlsx"), sheet = "Long Format")
-  tbleResult <- readLongTable(tbleLong, scoringTable)
-  totalLipidScoresTableData <- calculateTotalLipidScoresTableData(tbleResult)
+  scoringTable <- eposmol::loadScoringTable(system.file("extdata","Table 1.xlsx", package="eposmol"))
+  tbleLong <- openxlsx::read.xlsx(system.file("extdata","Table S2.xlsx", package="eposmol"), sheet = "Long Format")
+  tbleResult <- eposmol::readLongTable(tbleLong, scoringTable)
+  totalLipidScoresTableData <- eposmol::calculateTotalLipidScoresTableData(tbleResult)
   expect_equal(nrow(totalLipidScoresTableData), 6)
   expect_equal(ncol(totalLipidScoresTableData), 4)
   expect_equal(35, totalLipidScoresTableData |> filter(Name=="Cer 18:1;O2/16:0") |> pluck("TotalScore"))
@@ -109,12 +108,12 @@ test_that("calculateTotalLipidScoresTableData works", {
 })
 
 test_that("checkNames works", {
-  scoringTable <- loadScoringTable(path=file.path("..","..","inst","extdata","Table 1.xlsx"))
-  cvMapTable <- loadCvMapTable(path = file.path("..","..","inst", "extdata", "shorthand_cv_map.xlsx"))
-  tbleLong <- openxlsx::read.xlsx(file.path("..","..","inst","extdata","Table S2.xlsx"), sheet = "Long Format")
-  tbleResult <- readLongTable(tbleLong, scoringTable)
-  totalLipidScoresTableData <- calculateTotalLipidScoresTableData(tbleResult)
-  nameData <- checkNames(totalLipidScoresTableData, cvMapTable)
+  scoringTable <- eposmol::loadScoringTable(path=system.file("extdata","Table 1.xlsx", package="eposmol"))
+  cvMapTable <- eposmol::loadCvMapTable(path = system.file("extdata", "shorthand_cv_map.xlsx", package="eposmol"))
+  tbleLong <- openxlsx::read.xlsx(system.file("extdata","Table S2.xlsx", package="eposmol"), sheet = "Long Format")
+  tbleResult <- eposmol::readLongTable(tbleLong, scoringTable)
+  totalLipidScoresTableData <- eposmol::calculateTotalLipidScoresTableData(tbleResult)
+  nameData <- eposmol::checkNames(totalLipidScoresTableData, cvMapTable)
   expect_equal(nrow(nameData), 6)
   expect_equal(ncol(nameData), 15)
   expect_equal(50, nameData |> filter(Name=="Lipid Feature m/z 752.56") |> pluck("TotalScore"))

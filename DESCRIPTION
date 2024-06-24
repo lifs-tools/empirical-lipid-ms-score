@@ -32,7 +32,8 @@ Imports:
     rintrojs,
     here,
     DT,
-    knitr
+    knitr,
+    pkgload
 Suggests:
     testthat,
     shinytest2,
