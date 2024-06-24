@@ -37,7 +37,7 @@ test_that("{shinytest2} recording: epos-load-wide-example", {
 test_that("{shinytest2} recording: epos-load-long", {
   shiny_app <- eposmol::run_eposmol_app(test.mode=TRUE)
   app <- AppDriver$new(shiny_app, variant = platform_variant(), name = "epos-load-long", height = 1333, width = 1419)
-  app$upload_file(tableFile = system.file("extdata","Table S2.xlsx", package="eposmol"))
+  app$upload_file(tableFile = system.file("extdata","eposmol::run_eposmol_app()Table S2.xlsx", package="eposmol"))
   app$set_inputs(tableSheet = "Long Format")
   app$set_inputs(tableFormat = "long")
   app$click("loadExcel")
