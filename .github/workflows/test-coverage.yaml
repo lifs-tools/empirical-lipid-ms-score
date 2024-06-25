@@ -26,6 +26,11 @@ jobs:
         with:
           extra-packages: any::devtools
 
+      - name: Install Package
+        run: |
+          devtools::install()
+        shell: Rscript {0}
+
       - name: Run Tests
         run: |
           devtools::test()
