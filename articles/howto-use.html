@@ -79,7 +79,7 @@
                         <h4 data-toc-skip class="author">Nils
 Hoffmann</h4>
             
-            <h4 data-toc-skip class="date">2024-06-24</h4>
+            <h4 data-toc-skip class="date">2024-06-25</h4>
       
       <small class="dont-index">Source: <a href="https://github.com/lifs-tools/empirical-lipid-ms-score/blob/HEAD/vignettes/howto-use.Rmd" class="external-link"><code>vignettes/howto-use.Rmd</code></a></small>
       <div class="hidden name"><code>howto-use.Rmd</code></div>
@@ -88,13 +88,19 @@ Hoffmann</h4>
 
     
     
+<p>In order to use the eposmol library, please install the package from
+an active R session first:</p>
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="fu">devtools</span><span class="fu">::</span><span class="fu"><a href="https://remotes.r-lib.org/reference/install_github.html" class="external-link">install_github</a></span><span class="op">(</span><span class="st">"lifs-tools/empirical-lipid-ms-score"</span><span class="op">)</span></span></code></pre></div>
+<p>The main scoring table is location in the <code>Table_1.xlsx</code>
+table.</p>
+<div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">scoringScheme</span> <span class="op">&lt;-</span> <span class="fu">read_excel</span><span class="op">(</span></span>
-<span>  path <span class="op">=</span> <span class="fu">here</span><span class="op">(</span><span class="st">"inst"</span>,<span class="st">"extdata"</span>,<span class="st">"Table 1.xlsx"</span><span class="op">)</span>,</span>
+<span>  path <span class="op">=</span> <span class="fu">here</span><span class="op">(</span><span class="st">"inst"</span>,<span class="st">"extdata"</span>,<span class="st">"Table_1.xlsx"</span><span class="op">)</span>,</span>
 <span>  sheet <span class="op">=</span> <span class="st">"Scoring scheme"</span>, </span>
 <span>  range <span class="op">=</span> <span class="st">"A1:X30"</span></span>
 <span><span class="op">)</span></span></code></pre></div>
-<div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">scoringSchemeLong</span> <span class="op">&lt;-</span> <span class="va">scoringScheme</span> <span class="op">%&gt;%</span> </span>
 <span>  <span class="fu">pivot_longer</span><span class="op">(</span></span>
 <span>    cols<span class="op">=</span><span class="op">!</span><span class="va">Primary</span><span class="op">:</span><span class="va">ID</span>, </span>
@@ -136,7 +142,7 @@ Hoffmann</h4>
 <td>(+)</td>
 </tr>
 </tbody></table>
-<div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">ex_a</span> <span class="op">&lt;-</span> <span class="st">"Cer 18:1;O2/16:0"</span></span>
 <span><span class="va">ex_a_norm</span> <span class="op">&lt;-</span> <span class="fu">parseLipidNames</span><span class="op">(</span><span class="va">ex_a</span><span class="op">)</span></span>
 <span><span class="va">ex_a_norm</span></span>
@@ -160,7 +166,7 @@ Hoffmann</h4>
 <span><span class="co">#&gt; 1           NA    NA     NA    NA     NA          &lt;NA&gt;             &lt;NA&gt;</span></span>
 <span><span class="co">#&gt;   FA4.Position FA4.C FA4.OH FA4.O FA4.DB FA4.Bond.Type FA4.DB.Positions</span></span>
 <span><span class="co">#&gt; 1           NA    NA     NA    NA     NA          &lt;NA&gt;             &lt;NA&gt;</span></span></code></pre></div>
-<div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">ex_a_lc</span> <span class="op">&lt;-</span> <span class="va">ex_a_norm</span><span class="op">[</span><span class="fl">1</span>, <span class="st">"Lipid.Maps.Category"</span><span class="op">]</span></span>
 <span><span class="va">nominalMassPos</span> <span class="op">&lt;-</span> <span class="va">scoringSchemeLong</span> <span class="op">|&gt;</span> </span>
 <span>  <span class="fu"><a href="https://rdrr.io/r/stats/filter.html" class="external-link">filter</a></span><span class="op">(</span></span>
@@ -223,7 +229,7 @@ fatty acyl fragment for negative mode.</p>
 <td>(+) &amp; (-)</td>
 </tr>
 </tbody></table>
-<div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">ex_b</span> <span class="op">&lt;-</span> <span class="st">"Cer 18:1;O2/18:1"</span></span>
 <span><span class="va">ex_b_norm</span> <span class="op">&lt;-</span> <span class="fu">parseLipidNames</span><span class="op">(</span><span class="va">ex_b</span><span class="op">)</span></span>
 <span><span class="va">ex_b_norm</span></span>
@@ -247,7 +253,7 @@ fatty acyl fragment for negative mode.</p>
 <span><span class="co">#&gt; 1           NA    NA     NA    NA     NA          &lt;NA&gt;             &lt;NA&gt;</span></span>
 <span><span class="co">#&gt;   FA4.Position FA4.C FA4.OH FA4.O FA4.DB FA4.Bond.Type FA4.DB.Positions</span></span>
 <span><span class="co">#&gt; 1           NA    NA     NA    NA     NA          &lt;NA&gt;             &lt;NA&gt;</span></span></code></pre></div>
-<div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">ex_b_lipidCategory</span> <span class="op">&lt;-</span> <span class="va">ex_b_norm</span><span class="op">[</span><span class="fl">1</span>, <span class="st">"Lipid.Maps.Category"</span><span class="op">]</span></span>
 <span><span class="va">nominalMassPos</span> <span class="op">&lt;-</span> <span class="va">scoringSchemeLong</span> <span class="op">|&gt;</span> </span>
 <span>  <span class="fu"><a href="https://rdrr.io/r/stats/filter.html" class="external-link">filter</a></span><span class="op">(</span></span>
