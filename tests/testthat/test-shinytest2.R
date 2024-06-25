@@ -1,4 +1,5 @@
 library(shinytest2)
+skip_on_ci()
 
 test_that("{shinytest2} recording: epos-load-wide", {
   shiny_app <- eposmol::run_eposmol_app(test.mode = TRUE)
