@@ -107,6 +107,11 @@
 <p>In order to load the packages, without the need to build and install it:</p>
 <pre><code><span><span class="fu">devtools</span><span class="fu">::</span><span class="fu"><a href="https://devtools.r-lib.org/reference/load_all.html" class="external-link">load_all</a></span><span class="op">(</span><span class="op">)</span></span></code></pre>
 <p>You can then use the regular “Run App” button within RStudio to launch the Shiny app.</p>
+<p>Alternatively, you can install the package, as shown above, then load it and run:</p>
+<pre><code><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/lifs-tools/empirical-lipid-ms-score" class="external-link">eposmol</a></span><span class="op">)</span></span>
+<span><span class="fu"><a href="reference/run_eposmol_app.html">run_eposmol_app</a></span><span class="op">(</span><span class="op">)</span></span></code></pre>
+<p>After that, the app is accessible from your browser. Please check your R console output for the exact URL and port. The following is just an example. The port may be different on your system:</p>
+<pre><code>Listening on http://127.0.0.1:6097</code></pre>
 </div>
 <div class="section level2">
 <h2 id="building-the-docker-image">Building the Docker image<a class="anchor" aria-label="anchor" href="#building-the-docker-image"></a>
