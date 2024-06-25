@@ -3,7 +3,6 @@
 export(addRowManually)
 export(calculateTotalLipidScoresTableData)
 export(checkNames)
-export(l)
 export(loadCategoryAndClassMapTable)
 export(loadCvMapTable)
 export(loadScoringTable)

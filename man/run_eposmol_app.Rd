@@ -4,7 +4,7 @@
 \alias{run_eposmol_app}
 \title{Start the EPoSMoL Shiny Webapplication.}
 \usage{
-run_eposmol_app(test.mode = FALSE, ...)
+run_eposmol_app(test.mode = FALSE)
 }
 \arguments{
 \item{test.mode}{enable or disable test.mode}

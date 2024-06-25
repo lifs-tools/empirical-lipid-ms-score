@@ -16,19 +16,20 @@ library(htmltools)
 library(rintrojs)
 library(DT)
 library(here)
+library(tibble)
 #library(knitr)
 
 #' Start the EPoSMoL Shiny Webapplication.
 #' @param test.mode enable or disable test.mode
 #' @returns A ShinyApp object.
 #' @export
-run_eposmol_app <- function(..., test.mode=FALSE) {
+run_eposmol_app <- function(test.mode=FALSE) {
 
   appInfo <- list(
     "application.name"="EPoS-MoL",
     "application.version"="0.9.9",
     "application.date"=date(),
-    "application.authors"="Nils Hoffmann, Harald Köfeler",
+    "application.authors"="Nils Hoffmann, Harald Koefeler",
     "application.license"="MIT",
     "application.url"="https://github.com/lifs-tools/empirical-lipid-ms-score",
     "application.imprintAndPrivacyPolicy"="https://lifs-tools.org/imprint-privacy-policy.html",
@@ -36,7 +37,7 @@ run_eposmol_app <- function(..., test.mode=FALSE) {
   )
 
   cvMapTable <- eposmol::loadCvMapTable(path = system.file("extdata", "shorthand_cv_map.xlsx", package="eposmol"))
-  scoringTable <- eposmol::loadScoringTable(path = system.file("extdata", "Table 1.xlsx", package="eposmol"))
+  scoringTable <- eposmol::loadScoringTable(path = system.file("extdata", "Table_1.xlsx", package="eposmol"))
   lipidCategoryAndClassMapTable <- eposmol::loadCategoryAndClassMapTable(path = system.file("extdata", "class_map.xlsx", package="eposmol"))
   lipidClassifications <-
     sort(unique(scoringTable$LipidCategoryOrClass))
@@ -82,13 +83,13 @@ run_eposmol_app <- function(..., test.mode=FALSE) {
       shiny::titlePanel("EPoS-MoL Calculation"),
       shiny::sidebarLayout(
         shiny::sidebarPanel(
-          # actionButton("help", icon=icon("question"), class="btn-info", label="Start Tour"),
-          tags$br(),
+          # actionButton("help", icon=shiny::icon("question"), class="btn-info", label="Start Tour"),
+          shiny::tags$br(),
           shiny::tabsetPanel(
             id = "sidebarPanels",
             shiny::tabPanel(
               "Upload",
-              tags$br(),
+              shiny::tags$br(),
               rintrojs::introBox(
                 shiny::fileInput(
                   "tableFile",
@@ -104,7 +105,7 @@ run_eposmol_app <- function(..., test.mode=FALSE) {
                 data.step = 1,
                 data.intro = "Upload your lipid annotation data in EXCEL format here."
               ),
-              tags$hr(),
+              shiny::tags$hr(),
               rintrojs::introBox(
                 shiny::selectInput("tableSheet",
                   label = "Select the sheet to load",
@@ -122,7 +123,7 @@ run_eposmol_app <- function(..., test.mode=FALSE) {
                 data.step = 3,
                 data.intro = "Choose either the wide or long table format. You can download an example file demonstrating both formats further down."
               ),
-              tags$hr(),
+              shiny::tags$hr(),
               shiny::fluidRow(
                 shiny::column(12,
                   align="left",
@@ -146,7 +147,7 @@ run_eposmol_app <- function(..., test.mode=FALSE) {
             ),
             shiny::tabPanel(
               "Manual Input",
-              tags$br(),
+              shiny::tags$br(),
               shiny::textInput("lipidName", "Lipid Name"),
               shiny::selectInput(
                 "lipidCategoryOrClass",
@@ -188,7 +189,7 @@ run_eposmol_app <- function(..., test.mode=FALSE) {
               shiny::actionButton("reset2", "Reset", class = "btn-danger")
             )
           ),
-          tags$hr(),
+          shiny::tags$hr(),
           rintrojs::introBox(
             style="display:inline-block;",
             shiny::downloadButton(
@@ -196,7 +197,7 @@ run_eposmol_app <- function(..., test.mode=FALSE) {
               "Download Example",
               class = "btn-info",
               style="display:inline-block;",
-              icon = icon("download")
+              icon = shiny::icon("download")
             ),
             data.step = 6,
             data.intro = "Click here to download an example lipid annotation dataset. The file contains to sheets for the wide and long format."
@@ -220,7 +221,7 @@ run_eposmol_app <- function(..., test.mode=FALSE) {
                 shiny::fluidRow(
                   shiny::column(
                     12,
-                    br(),
+                    shiny::tags$br(),
                     DT::dataTableOutput("totalLipidEvidenceScoreTable"),
                     rintrojs::introBox(
                       style="display: inline-block;",
@@ -228,7 +229,7 @@ run_eposmol_app <- function(..., test.mode=FALSE) {
                         "checkNames",
                         "Parse & Convert Lipid Names",
                         class = "btn-success",
-                        icon = icon("check")
+                        icon = shiny::icon("check")
                       )),
                       data.step = 9,
                       data.intro = "Click here to check and automatically normalize supported lipid names into the updated shorthand nomenclature."
@@ -253,7 +254,7 @@ run_eposmol_app <- function(..., test.mode=FALSE) {
               rintrojs::introBox(
                 shiny::fluidRow(shiny::column(
                   12,
-                  br(),
+                  shiny::tags$br(),
                   DT::dataTableOutput("lipidEvidenceScoreTable")
                 )),
                 data.step = 11,
@@ -265,7 +266,7 @@ run_eposmol_app <- function(..., test.mode=FALSE) {
               rintrojs::introBox(
                 shiny::fluidRow(shiny::column(
                   12,
-                  br(),
+                  shiny::tags$br(),
                   DT::dataTableOutput("originalTable")
                 )),
                 data.step = 12,
@@ -277,7 +278,7 @@ run_eposmol_app <- function(..., test.mode=FALSE) {
               rintrojs::introBox(
                 shiny::fluidRow(shiny::column(
                   12,
-                  br(),
+                  shiny::tags$br(),
                   DT::dataTableOutput("referenceScoreTable")
                 )),
                 data.step = 13,
@@ -289,7 +290,7 @@ run_eposmol_app <- function(..., test.mode=FALSE) {
               rintrojs::introBox(
                 shiny::fluidRow(shiny::column(
                   12,
-                  br(),
+                  shiny::tags$br(),
                   DT::dataTableOutput("lipidCategoryAndClassMapTable")
                 )),
                 data.step = 14,
@@ -310,44 +311,44 @@ run_eposmol_app <- function(..., test.mode=FALSE) {
                 shiny::fluidRow(
                   shiny::column(
                     width = 12,
-                    h2("Application Information"),
+                    shiny::tags$h2("Application Information"),
                     shiny::column(
                       width = 12,
-                      tags$label("Name:"),
+                      shiny::tags$label("Name:"),
                       shiny::textOutput(
                         "applicationName", inline = TRUE
                       ),
-                      tags$br(),
-                      tags$label("Version:"),
+                      shiny::tags$br(),
+                      shiny::tags$label("Version:"),
                       shiny::textOutput(
                         "applicationVersion", inline = TRUE
                       ),
-                      tags$br(),
-                      tags$label("Build Date:"),
+                      shiny::tags$br(),
+                      shiny::tags$label("Build Date:"),
                       shiny::textOutput(
                         "applicationDate", inline = TRUE
                       ),
-                      tags$br(),
-                      tags$label("Authors:"),
+                      shiny::tags$br(),
+                      shiny::tags$label("Authors:"),
                       shiny::textOutput(
                         "applicationAuthors", inline = TRUE
                       ),
-                      tags$br(),
-                      tags$label("License:"),
+                      shiny::tags$br(),
+                      shiny::tags$label("License:"),
                       shiny::textOutput(
                         "applicationLicense", inline = TRUE
                       ),
-                      tags$br(),
-                      tags$label("Homepage:"),
+                      shiny::tags$br(),
+                      shiny::tags$label("Homepage:"),
                       shiny::uiOutput(
                         "applicationHomepage", inline = TRUE
                       ),
-                      tags$br(),
-                      tags$label("Imprint & Privacy Policy:"),
+                      shiny::tags$br(),
+                      shiny::tags$label("Imprint & Privacy Policy:"),
                       shiny::uiOutput(
                         "imprintAndPrivacyPolicy", inline = TRUE
                       ),
-                      tags$br(),
+                      shiny::tags$br(),
                       shiny::uiOutput(
                         "applicationIssues"
                       )
@@ -357,7 +358,7 @@ run_eposmol_app <- function(..., test.mode=FALSE) {
                 shiny::fluidRow(
                   shiny::column(
                     width = 12,
-                    h2("Libraries used by EPoS-MoL"),
+                    shiny::tags$h2("Libraries used by EPoS-MoL"),
                     # collapsible = TRUE,
                     # collapsed = TRUE,
                     DT::dataTableOutput("appLibraries")
@@ -483,7 +484,7 @@ run_eposmol_app <- function(..., test.mode=FALSE) {
 
     shiny::observeEvent(input$loadExample, {
       shinyjs::enable("loadExcel")
-      values$tableFilePath <- system.file("extdata","Table S2.xlsx", package="eposmol")
+      values$tableFilePath <- system.file("extdata","Table_S2.xlsx", package="eposmol")
       shiny::updateSelectInput(session,
         "tableSheet",
         choices = readxl::excel_sheets(values$tableFilePath)
@@ -553,7 +554,7 @@ run_eposmol_app <- function(..., test.mode=FALSE) {
     })
 
     shiny::observeEvent(input$checkNames, {
-      req(values$totalLipidScoresTableData)
+      shiny::req(values$totalLipidScoresTableData)
       values$totalLipidScoresTableData <- eposmol::checkNames(values$totalLipidScoresTableData, cvMapTable)
     })
 
@@ -629,7 +630,7 @@ run_eposmol_app <- function(..., test.mode=FALSE) {
         paste0("EPOS-Mol-Examples", ".xlsx")
       },
       content = function(file) {
-        file.copy(system.file("extdata", "Table S2.xlsx", package="eposmol"), file)
+        file.copy(system.file("extdata", "Table_S2.xlsx", package="eposmol"), file)
       },
       contentType = "application/msexcel"
     )
@@ -666,11 +667,11 @@ run_eposmol_app <- function(..., test.mode=FALSE) {
     output$applicationDate <- shiny::renderText({appInfo$application.date})
     output$applicationAuthors <- shiny::renderText({appInfo$application.authors})
     output$applicationLicense <- shiny::renderText({appInfo$application.license})
-    output$applicationHomepage <- shiny::renderUI({tags$a(href=appInfo$application.url, target="_blank", appInfo$application.url)})
-    output$imprintAndPrivacyPolicy <- shiny::renderUI({tags$a(href=appInfo$application.imprintAndPrivacyPolicy, target="_blank", appInfo$application.imprintAndPrivacyPolicy)})
-    output$applicationIssues <- shiny::renderUI({tags$a(href=appInfo$application.issues, target="_blank", "Report an issue", class="btn btn-danger")})
+    output$applicationHomepage <- shiny::renderUI({shiny::tags$a(href=appInfo$application.url, target="_blank", appInfo$application.url)})
+    output$imprintAndPrivacyPolicy <- shiny::renderUI({shiny::tags$a(href=appInfo$application.imprintAndPrivacyPolicy, target="_blank", appInfo$application.imprintAndPrivacyPolicy)})
+    output$applicationIssues <- shiny::renderUI({shiny::tags$a(href=appInfo$application.issues, target="_blank", "Report an issue", class="btn btn-danger")})
 
-    loadedLibraries <- reactive({
+    loadedLibraries <- shiny::reactive({
       assemblePackageDescriptions((.packages()))
     })
 
@@ -731,7 +732,3 @@ run_eposmol_app <- function(..., test.mode=FALSE) {
   )
   return(shinyApp)
 }
-
-
-#' @export
-l <- run_eposmol_app

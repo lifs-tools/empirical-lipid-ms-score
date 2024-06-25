@@ -8,7 +8,7 @@ Furthermore the scoring scheme is integrated with the annotation levels as propo
 
 If you use EPoS-MoL, please cite the following publication:
 
-** TODO Publication **
+** TODO **
 
 More information and support for EPoS-ML is available at <a href="https://github.com/lifs-tools/empirical-lipid-ms-score" target="_blank">https://github.com/lifs-tools/empirical-lipid-ms-score</a>
 

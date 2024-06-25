@@ -6,3 +6,8 @@
 ^\.github$
 ^app.R$
 _\.new\.png$
+^\.dockerignore$
+^Dockerfile$
+^docker-compose-eposmol.yml$
+^run.sh$
+^LICENSE.md$

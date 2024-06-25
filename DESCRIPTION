@@ -24,21 +24,21 @@ Imports:
     tidyr,
     stringr,
     htmltools,
-    cicerone,
     purrr,
-    jsonlite,
-    markdown,
     rgoslin,
     rintrojs,
     here,
     DT,
-    knitr,
-    pkgload
+    tibble,
+    tidyselect
 Suggests:
     testthat,
     shinytest2,
     diffviewer,
     pkgdown,
-    devtools
+    devtools,
+    knitr,
+    rmarkdown,
+    tidyverse
 RoxygenNote: 7.3.1
 VignetteBuilder: knitr

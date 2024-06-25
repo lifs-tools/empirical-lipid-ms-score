@@ -79,7 +79,7 @@ readWideTable <- function(tble, scoringTable) {
   tble |>
     dplyr::group_by(Name, LipidCategoryOrClass, IonMode) |>
     tidyr::pivot_longer(
-      4:last_col(),
+      4:tidyselect::last_col(),
       names_to = "Feature",
       values_to = "Value",
       values_ptypes = list(Value = character()),
