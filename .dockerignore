@@ -8,3 +8,4 @@ man
 .Rprofile
 renv
 renv.lock
+.dev

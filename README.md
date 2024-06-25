@@ -40,6 +40,19 @@ devtools::load_all()
 
 You can then use the regular "Run App" button within RStudio to launch the Shiny app.
 
+Alternatively, you can install the package, as shown above, then load it and run:
+
+```
+library(eposmol)
+run_eposmol_app()
+```
+
+After that, the app is accessible from your browser. Please check your R console output for the exact URL and port. The following is just an example. The port may be different on your system: 
+
+```
+Listening on http://127.0.0.1:6097
+```
+
 ## Building the Docker image
 
 The Docker image can be built using the following command:
