@@ -4,7 +4,7 @@ author: "Nils Hoffmann"
 date: "`r Sys.Date()`"
 output: rmarkdown::html_vignette
 vignette: >
-  %\VignetteIndexEntry{Vignette Title}
+  %\VignetteIndexEntry{How to use EPos-MoL}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
 ---
@@ -14,16 +14,23 @@ knitr::opts_chunk$set(
   collapse = TRUE,
   comment = "#>"
 )
-renv::install(c("tidyverse","readxl","lifs-tools/rgoslin","here"))
 library(tidyverse)
 library(readxl)
 library(rgoslin)
 library(here)
 ```
 
+In order to use the eposmol library, please install the package from an active R session first:
+
+```{r eval=FALSE, echo=TRUE}
+devtools::install_github("lifs-tools/empirical-lipid-ms-score")
+```
+
+The main scoring table is location in the `Table_1.xlsx` table. 
+
 ```{r, echo=TRUE}
 scoringScheme <- read_excel(
-  path = here("inst","extdata","Table 1.xlsx"),
+  path = here("inst","extdata","Table_1.xlsx"),
   sheet = "Scoring scheme", 
   range = "A1:X30"
 )
