@@ -10,7 +10,7 @@ If you use EPoS-MoL, please cite the following publication:
 
 ** TODO **
 
-More information and support for EPoS-ML is available at <a href="https://github.com/lifs-tools/empirical-lipid-ms-score" target="_blank">https://github.com/lifs-tools/empirical-lipid-ms-score</a>
+More information and support for EPoS-ML is available <a href="https://github.com/lifs-tools/empirical-lipid-ms-score" target="_blank" rel="noreferrer">here on GitHub</a>.
 
 ## EPoS-MoL Webapplication
 
@@ -19,6 +19,6 @@ You can load the example data by clicking on the 'Load example data' button on t
 
 ## References
 
-[1] D. Kopczynski, N. Hoffmann, B. Peng, G. Liebisch, F. Spener, and R. Ahrends, "Goslin 2.0 Implements the Recent Lipid Shorthand Nomenclature for MS-Derived Lipid Structures," Anal. Chem., vol. 94, no. 16, pp. 6097–6101, Apr. 2022, doi: https://doi.org/10.1021/acs.analchem.1c05430
+[1] D. Kopczynski, N. Hoffmann, B. Peng, G. Liebisch, F. Spener, and R. Ahrends, "Goslin 2.0 Implements the Recent Lipid Shorthand Nomenclature for MS-Derived Lipid Structures," Anal. Chem., vol. 94, no. 16, pp. 6097–6101, Apr. 2022, <a href="https://doi.org/10.1021/acs.analchem.1c05430" target="_blank" rel="noreferrer">doi: 10.1021/acs.analchem.1c05430</a>
 
-[2] G. Liebisch *et al.*, "Update on LIPID MAPS classification, nomenclature, and shorthand notation for MS-derived lipid structures," J Lipid Res, vol. 61, no. 12, pp. 1539–1555, Dec. 2020, doi: https://doi.org/10.1194/jlr.S120001025
+[2] G. Liebisch *et al.*, "Update on LIPID MAPS classification, nomenclature, and shorthand notation for MS-derived lipid structures," J Lipid Res, vol. 61, no. 12, pp. 1539–1555, Dec. 2020, <a href="https://doi.org/10.1194/jlr.S120001025" target="_blank" rel="noreferrer">doi: 10.1194/jlr.S120001025</a>

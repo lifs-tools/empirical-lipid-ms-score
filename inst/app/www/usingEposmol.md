@@ -72,7 +72,8 @@ The table will consist of the following columns:
 - ID (a unique ID for the feature coordinate)
 - Score (the point score of the feature)
 
-Additionally, if you run Goslin the output may contain a column *Shorthand.Level.CvTerm* that will contain the controlled vocabulary term for the shorthand lipid name level as returned by Goslin. See [PSI-MS](https://www.ebi.ac.uk/ols4/ontologies/ms) for more details.
+Additionally, if you run Goslin the output may contain a column *Shorthand.Level.CvTerm* that will contain the controlled vocabulary term for the shorthand lipid name level as returned by Goslin. See 
+<a href="https://www.ebi.ac.uk/ols4/ontologies/ms" target="_blank" rel="noreferrer">the PSI-MS controlled vocabulary at OLS</a> for more details.
 
 ## Input Data Format - Mandatory column names
 

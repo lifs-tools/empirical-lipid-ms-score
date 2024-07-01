@@ -5,9 +5,12 @@ services:
       context: .
       dockerfile: Dockerfile
     platform: linux/amd64
+    volumes:
+      - ${PWD}/.dev:/app/.dev
+    # restart: always
     develop:
       watch:
-        - action: sync
+        - action: rebuild
           path: ./
           target: /app/
           ignore:

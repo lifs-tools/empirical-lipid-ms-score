@@ -658,10 +658,6 @@ run_eposmol_app <- function(test.mode=FALSE) {
       shiny::HTML(htmltools::includeMarkdown(system.file("app/www/usingEposmol.md", package = "eposmol")))
     })
 
-    # output$howtoUseMarkdown <- renderUI({
-    #   HTML(markdown::markdownToHTML(knit(here::here("vignettes","howto-use.Rmd"), quiet = TRUE)))
-    # })
-
     output$applicationName <- shiny::renderText({appInfo$application.name})
     output$applicationVersion <- shiny::renderText({appInfo$application.version})
     output$applicationDate <- shiny::renderText({appInfo$application.date})
@@ -708,11 +704,11 @@ run_eposmol_app <- function(test.mode=FALSE) {
     shiny.reactlog = TRUE,
     shiny.error = browser,
     shiny.autoload.r = TRUE,
-    test.mode = test.mode
+    shiny.testmode = test.mode
   )
   prodOptions <- options(
     shiny.autoload.r = TRUE,
-    test.mode = test.mode
+    shiny.testmode = test.mode
   )
 
   if (file.exists(here::here(".dev"))) {

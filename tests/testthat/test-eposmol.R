@@ -133,3 +133,11 @@ test_that("checkNames works", {
   expect_equal("SN_POSITION", nameData |> filter(Name=="PI 18:1/18:1") |> pluck("Shorthand.Level"))
   expect_equal("MS:1003317", nameData |> filter(Name=="PI 18:1/18:1") |> pluck("Shorthand.Level.CvTerm"))
 })
+
+test_that("mapCategoryOrClass works", {
+  classMap <- eposmol::loadCategoryAndClassMapTable(path=system.file("extdata","class_map.xlsx", package="eposmol"))
+  expect_equal(nrow(classMap), 87)
+  expect_equal(ncol(classMap), 2)
+  expect_equal("SP", eposmol::mapCategoryOrClass("SP", classMap))
+  expect_equal("Unknown", eposmol::mapCategoryOrClass("GP", classMap))
+})

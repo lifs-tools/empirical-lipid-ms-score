@@ -18,7 +18,14 @@ library(tidyverse)
 library(readxl)
 library(rgoslin)
 library(here)
+library(eposmol)
 ```
+
+## Summary
+
+This vignette provides an introduction to the eposmol library. The eposmol library is a library for the scoring of lipid species identified in mass spectrometry experiments, based on their eposmol class and using their molecular properties and fragments. The library is used in the EPos-MoL R-Shiny web application where users can upload identification tables created with their software, where individual lipid species and their identified features are listed in.
+
+## Installation
 
 In order to use the eposmol library, please install the package from an active R session first:
 
@@ -26,7 +33,19 @@ In order to use the eposmol library, please install the package from an active R
 devtools::install_github("lifs-tools/empirical-lipid-ms-score")
 ```
 
-The main scoring table is location in the `Table_1.xlsx` table. 
+For the examples in this vignette, we will use the following libraries:
+
+```{r eval=FALSE, echo=TRUE}
+library(tidyverse)
+library(readxl)
+library(rgoslin)
+library(here)
+library(eposmol)
+```
+
+## Scoring and Mapping Tables
+
+The main scoring table is located in the file `Table_1.xlsx` (below `inst/extdata`). This table contains the scoring scheme for the identification of lipid species based on their eposmol class, using their molecular properties and fragments.
 
 ```{r, echo=TRUE}
 scoringScheme <- read_excel(
@@ -34,40 +53,62 @@ scoringScheme <- read_excel(
   sheet = "Scoring scheme", 
   range = "A1:X30"
 )
+scoringScheme
 ```
+
+The mapping of LIPID MAPS categories and classes is in the `class_map.xlsx` table (below `inst/extdata`). This table can be used to map the lipid names from LIPID MAPS or as parsed by the Goslin library to the eposmol categories and classes. If you do not use the Goslin library to parse lipid names, or you are using [currently unsupported lipid classes or categories](https://github.com/lifs-tools/goslin/issues/new?assignees=&labels=&projects=&template=feature_request.md&title=), you will need to manually assign the correct eposmol class to your lipid scoring input before supplying it to the scoring function.
+
+```{r, echo=TRUE}
+classMap <- read_excel(
+  path = here("inst","extdata","class_map.xlsx"),
+  sheet = "class_map", 
+  range = "A1:B88"
+)
+classMap
+```
+
+We will transform the scoring scheme table into a long format table for easier access to the scoring values.
 
 ```{r}
 scoringSchemeLong <- scoringScheme %>% 
   pivot_longer(
     cols=!Primary:ID, 
-    names_to = "lipidClassification"
+    names_to = "EposmolCategoryOrClass"
   )
 scoringSchemeLong
 ```
 
+The following examples are also contained in the `Table_5.xlsx` file in the `inst/extdata` folder. The examples use the same scoring scheme as the main scoring table.
+
 ## Example a
 
-|               |                     |
-| ------------- | ------------------- |
-| Platform      | TQ EVOQ Elite       |
-| Separation    | UHPLC               |
-| MS Mode       | MRM                 |
-| Ion Mode      | (+)                 |
+This example assigns points for identification of a Ceramide with one long chain base with 18 carbon atoms, one double bond and a fatty acyl with 16 carbon atoms and no double bond. Identification was performed in positive mode on a triple quadrupole instrument with UHPLC separation. We here assign points for nominal mass accuracy, chromatography and the primary head group CID fragment.
+
+You can use the `mapCategoryOrClass` function to map the LIPID MAPS category or class to the eposmol category or class. 
+
+|            |               |
+|------------|---------------|
+| Platform   | TQ EVOQ Elite |
+| Separation | UHPLC         |
+| MS Mode    | MRM           |
+| Ion Mode   | (+)           |
 
 ```{r}
 ex_a <- "Cer 18:1;O2/16:0"
-ex_a_norm <- parseLipidNames(ex_a)
+# parse name with Goslin and add eposmol class based on mapCategoryOrClass, using the default classMap
+ex_a_norm <- rgoslin::parseLipidNames(ex_a)
+ex_a_norm <- ex_a_norm |> mutate(eposmolCategoryOrClass = mapCategoryOrClass(ex_a_norm$Lipid.Maps.Category, classMap))
 ex_a_norm
 ```
 
 ```{r}
-ex_a_lc <- ex_a_norm[1, "Lipid.Maps.Category"]
+ex_a_lipidCategoryOrClass <- ex_a_norm[1, "eposmolCategoryOrClass"]
 nominalMassPos <- scoringSchemeLong |> 
   filter(
     Primary=="MS1" & 
     Secondary=="Molecular properties" &
     Evidence=="Nominal mass" &  
-    lipidClassification==ex_a_lc
+    EposmolCategoryOrClass==ex_a_lipidCategoryOrClass
   )|> 
   select(value)
 separation <- scoringSchemeLong |> 
@@ -75,7 +116,7 @@ separation <- scoringSchemeLong |>
     Primary=="MS1" &
     Secondary=="Molecular properties" &  
     Evidence=="Chromatography (RT)" &  
-    lipidClassification==ex_a_lc
+    EposmolCategoryOrClass==ex_a_lipidCategoryOrClass
   ) |> 
   select(value)
 headGroup <- scoringSchemeLong |> 
@@ -84,7 +125,7 @@ headGroup <- scoringSchemeLong |>
     Secondary=="CID fragments" &  
     Fragment=="LCF" &  
     Evidence=="Headgroup 1" &  
-    lipidClassification==ex_a_lc
+    EposmolCategoryOrClass==ex_a_lipidCategoryOrClass
   ) |> 
   select(value)
 score <- sum(  
@@ -94,30 +135,33 @@ score <- sum(
 )                                                                        
 score
 ```
+
 ## Example b
 
 Example b assigns points for identification of a Ceramide with one long chain base and a fatty acyl, both with 18 carbon atoms and one double bond each. Identification was performed in positive and negative mode on a low resolution QTrap instrument, without prior separation. We thus assign points for nominal mass accuracy in positive and negative mode, additional CID fragments for MS2 in both modes and the primary fatty acyl fragment for negative mode.
 
-|               |                     |
-| ------------- | ------------------- |
-| Platform      | QTrap 6500          |
-| Separation    | NA                  |
-| MS Mode       | Precursor Ion Scan  |
-| Ion Mode      | (+) & (-)           |
+|            |                    |
+|------------|--------------------|
+| Platform   | QTrap 6500         |
+| Separation | NA                 |
+| MS Mode    | Precursor Ion Scan |
+| Ion Mode   | (+) & (-)          |
+
 ```{r}
 ex_b <- "Cer 18:1;O2/18:1"
-ex_b_norm <- parseLipidNames(ex_b)
+ex_b_norm <- rgoslin::parseLipidNames(ex_b)
+ex_b_norm <- ex_b_norm |> mutate(eposmolCategoryOrClass = mapCategoryOrClass(ex_b_norm$Lipid.Maps.Category, classMap))
 ex_b_norm
 ```
 
 ```{r}
-ex_b_lipidCategory <- ex_b_norm[1, "Lipid.Maps.Category"]
+ex_b_lipidCategoryOrClass <- ex_b_norm[1, "eposmolCategoryOrClass"]
 nominalMassPos <- scoringSchemeLong |> 
   filter(
     Primary=="MS1" & 
     Secondary=="Molecular properties" &
     Evidence=="Nominal mass" &  
-    lipidClassification==ex_b_lipidCategory
+    EposmolCategoryOrClass==ex_b_lipidCategoryOrClass
   ) |> 
   select(value)
 headGroup1Pos <- scoringSchemeLong |> 
@@ -126,7 +170,7 @@ headGroup1Pos <- scoringSchemeLong |>
     Secondary=="CID fragments" &  
     Fragment=="LCF" &  
     Evidence=="Headgroup 1" &  
-    lipidClassification==ex_b_lipidCategory
+    EposmolCategoryOrClass==ex_b_lipidCategoryOrClass
   ) |> 
   select(value)
 nominalMassNeg <- scoringSchemeLong |> 
@@ -134,7 +178,7 @@ nominalMassNeg <- scoringSchemeLong |>
     Primary=="MS1" & 
     Secondary=="Molecular properties" &
     Evidence=="Nominal mass" &  
-    lipidClassification==ex_b_lipidCategory
+    EposmolCategoryOrClass==ex_b_lipidCategoryOrClass
   ) |> 
   select(value)
 headGroup1Neg <- scoringSchemeLong |> 
@@ -143,7 +187,7 @@ headGroup1Neg <- scoringSchemeLong |>
     Secondary=="CID fragments" &  
     Fragment=="LCF" &  
     Evidence=="Headgroup 2" &  
-    lipidClassification==ex_b_lipidCategory
+    EposmolCategoryOrClass==ex_b_lipidCategoryOrClass
   ) |>
   select(value)
 fa1Neg <- scoringSchemeLong |> 
@@ -152,7 +196,7 @@ fa1Neg <- scoringSchemeLong |>
     Secondary=="CID fragments" &  
     Fragment=="MLF" &  
     Evidence=="Fatty acyl 1-1" &  
-    lipidClassification==ex_b_lipidCategory
+    EposmolCategoryOrClass==ex_b_lipidCategoryOrClass
   ) |>
   select(value)
 score <- sum(  
@@ -164,3 +208,16 @@ score <- sum(
 )                                                                        
 score
 ```
+
+## Running the R-Shiny Webapplication
+
+The eposmol library is used in the EPos-MoL R-Shiny web application. Once you have installed the eposmol library, the web application can be started from an R session with the following command:
+
+```{r eval=FALSE}
+eposmol::run_eposmol_app()
+```
+The web application contains additional documentation detailing the input and output formats, as well as the scoring scheme used in the library. It further provides a user interface to upload identification tables and download the scored tables. The Shiny web application expects the eposmol category or class to be provided as a string in the `LipidCategoryOrClass` column. 
+
+A live version of the web application is available at [https://apps.lifs-tools.org/p/app/eposmol](https://apps.lifs-tools.org/p/app/eposmol). 
+
+Please note that the web application is launched individually and exclusively for every user to provide isolation and data protection from other users. After your session ends, any uploaded data will be deleted automatically. 

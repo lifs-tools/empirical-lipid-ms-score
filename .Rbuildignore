@@ -11,3 +11,5 @@ _\.new\.png$
 ^docker-compose-eposmol.yml$
 ^run.sh$
 ^LICENSE.md$
+^doc$
+^Meta$

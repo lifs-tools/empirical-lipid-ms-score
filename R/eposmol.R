@@ -12,7 +12,7 @@ loadScoringTable <- function(path=system.file("..", "inst", "extdata", "Table 1.
   )
   scoringSchemeLong <- scoringScheme |>
     tidyr::pivot_longer(
-      cols = !Primary:ID,
+      cols = !"Primary":"ID",
       names_to = "LipidCategoryOrClass"
     )
   scoringSchemeLong
@@ -49,6 +49,7 @@ loadCvMapTable <- function(path=system.file("..", "inst", "extdata", "shorthand_
 #' Read a long format table and join with the features defined in the scoring table. The long format table must have the following columns: Name, LipidCategoryOrClass, IonMode, Feature, Value.
 #' @importFrom dplyr left_join rename distinct arrange
 #' @importFrom tidyr drop_na
+#' @importFrom rlang .data
 #' @param tble The long format table.
 #' @param scoringTable The scoring table.
 #' @returns A tibble with the long format table.
@@ -64,13 +65,14 @@ readLongTable <- function(tble, scoringTable) {
       )
     ) |>
     dplyr::rename(Score = value) |>
-    dplyr::distinct(Name, LipidCategoryOrClass, IonMode, Feature, .keep_all = TRUE) |>
+    dplyr::distinct(.data$Name, .data$LipidCategoryOrClass, .data$IonMode, .data$Feature, .keep_all = TRUE) |>
     dplyr::arrange(.by_group = TRUE)
 }
 
 #' Read a wide format table and join with the features defined in the scoring table. The wide format table must have the following columns: Name, LipidCategoryOrClass, IonMode, and the features as columns.
 #' @importFrom dplyr group_by left_join rename distinct arrange
 #' @importFrom tidyr pivot_longer drop_na
+#' @importFrom rlang .data
 #' @param tble The wide format table.
 #' @param scoringTable The scoring table.
 #' @returns A tibble with the wide format table.
@@ -94,13 +96,14 @@ readWideTable <- function(tble, scoringTable) {
       )
     ) |>
     dplyr::rename(Score = value) |>
-    dplyr::group_by(Name, LipidCategoryOrClass, IonMode) |>
-    dplyr::distinct(Name, LipidCategoryOrClass, IonMode, Feature, .keep_all = TRUE) |>
+    dplyr::group_by(.data$Name, .data$LipidCategoryOrClass, .data$IonMode) |>
+    dplyr::distinct(.data$Name, .data$LipidCategoryOrClass, .data$IonMode, .data$Feature, .keep_all = TRUE) |>
     dplyr::arrange(.by_group = TRUE)
 }
 
 #' Add a result row manually to the lipidScoresTableData tibble.
 #' @importFrom dplyr add_row ungroup group_by
+#' @importFrom rlang .data
 #' @param lipidScoresTableData The lipidScoresTableData tibble.
 #' @param lipidName The lipid name.
 #' @param lipidCategoryOrClass The lipid category or class.
@@ -120,11 +123,12 @@ addRowManually <- function(lipidScoresTableData, lipidName, lipidCategoryOrClass
       Value = "",
       Score = as.numeric(evidenceScore)
     ) |>
-    dplyr::group_by(Name, LipidCategoryOrClass, IonMode)
+    dplyr::group_by(.data$Name, .data$LipidCategoryOrClass, .data$IonMode)
 }
 
 #' Read the manual table and join with the features defined in the scoring table. The manual table must have the following columns: Name, LipidCategoryOrClass, IonMode, Feature, Value.
 #' @importFrom dplyr left_join group_by distinct arrange ungroup select any_of
+#' @importFrom rlang .data
 #' @param tble The manual table.
 #' @param scoringTable The scoring table.
 #' @returns A tibble with the manual table data.
@@ -140,27 +144,29 @@ readManualTable <- function(tble, scoringTable) {
         "Feature" = "Evidence"
       )
     ) |>
-    dplyr::group_by(Name, LipidCategoryOrClass, IonMode) |>
-    dplyr::distinct(Name, LipidCategoryOrClass, IonMode, Feature, .keep_all = TRUE) |>
+    dplyr::group_by(.data$Name, .data$LipidCategoryOrClass, .data$IonMode) |>
+    dplyr::distinct(.data$Name, .data$LipidCategoryOrClass, .data$IonMode, .data$Feature, .keep_all = TRUE) |>
     dplyr::arrange(.by_group = TRUE)
 }
 
 #' Calculate the total lipid scores table data.
 #' @importFrom dplyr group_by summarise
 #' @importFrom stringr str_sort
+#' @importFrom rlang .data
 #' @param lipidScoresTableData The lipid scores table data.
 #' @returns A tibble with the total lipid scores table data.
 #' @export
 calculateTotalLipidScoresTableData <- function(lipidScoresTableData) {
   lipidScoresTableData |>
-    dplyr::group_by(Name, LipidCategoryOrClass) |>
-    dplyr::summarise(TotalScore = sum(Score), ScoreCode = paste0(stringr::str_sort(paste0(ID,IonMode,collapse=", "), numeric = T)))
+    dplyr::group_by(.data$Name, .data$LipidCategoryOrClass) |>
+    dplyr::summarise(TotalScore = sum(.data$Score), ScoreCode = paste0(stringr::str_sort(paste0(.data$ID, .data$IonMode, collapse=", "), numeric = T)))
 }
 
 #' Check if the lipid names are valid shorthand names using the rgoslin package.
 #' @importFrom dplyr left_join rename
 #' @importFrom purrr map_df keep
 #' @importFrom rgoslin parseLipidNames
+#' @importFrom rlang .data
 #' @param totalLipidScoresTableData The total lipid scores table data.
 #' @param cvMapTable The shorthand CV map table.
 #' @returns A tibble with the total lipid scores table data, joined with rgoslin parsing results.
@@ -202,6 +208,25 @@ checkNames <- function(totalLipidScoresTableData, cvMapTable) {
       return(NA)
     }
   )
+}
+
+#' Map the lipid category or class to the Eposmol category or class.
+#' @importFrom dplyr filter select pull
+#' @importFrom rlang .data
+#' @param lipidCategoryOrClass The lipid category or class. This can be a category or class from Goslin and/or LIPID MAPS.
+#' @param lipidCategoryAndClassMap The lipid category and class map tibble with columns LipidMapsCategoryOrClass and EposMolCategoryOrClass. By default, we suggest using the class_map.xlsx table in inst/extdata/.
+#' @returns The Eposmol category or class. If 'Unknown', the lipid category or class is not found in the map.
+#' @export
+mapCategoryOrClass <- function(lipidCategoryOrClass, lipidCategoryAndClassMap) {
+  eposmolsCategoryOrClass <- lipidCategoryAndClassMap |>
+    dplyr::filter(LipidMapsCategoryOrClass == lipidCategoryOrClass) |>
+    dplyr::select("EposmolCategoryOrClass") |>
+    dplyr::pull()
+  if (length(eposmolsCategoryOrClass) == 0) {
+    return("Unknown")
+  } else {
+    return(eposmolsCategoryOrClass[1])
+  }
 }
 
 assemblePackageDescriptions <- function(packageNames) {
