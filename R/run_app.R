@@ -27,7 +27,7 @@ run_eposmol_app <- function(test.mode=FALSE) {
 
   appInfo <- list(
     "application.name"="EPoS-MoL",
-    "application.version"="0.9.9",
+    "application.version"="0.9.10",
     "application.date"=date(),
     "application.authors"="Nils Hoffmann, Harald Koefeler",
     "application.license"="MIT",
