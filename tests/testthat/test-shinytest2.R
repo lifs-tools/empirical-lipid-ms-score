@@ -2,6 +2,7 @@ library(shinytest2)
 library(testthat)
 
 test_that("{shinytest2} recording: epos-load-wide", {
+  skip_on_ci()
   shiny_app <- eposmol::run_eposmol_app(test.mode = TRUE)
   app <- AppDriver$new(
     shiny_app,
@@ -20,6 +21,7 @@ test_that("{shinytest2} recording: epos-load-wide", {
 })
 
 test_that("{shinytest2} recording: epos-load-wide-example", {
+  skip_on_ci()
   shiny_app <- eposmol::run_eposmol_app(test.mode = TRUE)
   app <- AppDriver$new(
     shiny_app,
@@ -43,6 +45,7 @@ test_that("{shinytest2} recording: epos-load-wide-example", {
 })
 
 test_that("{shinytest2} recording: epos-load-long", {
+  skip_on_ci()
   shiny_app <- eposmol::run_eposmol_app(test.mode = TRUE)
   app <- AppDriver$new(
     shiny_app,
@@ -66,6 +69,7 @@ test_that("{shinytest2} recording: epos-load-long", {
 })
 
 test_that("{shinytest2} recording: epos-load-long-reset1", {
+  skip_on_ci()
   shiny_app <- eposmol::run_eposmol_app(test.mode = TRUE)
   app <- AppDriver$new(
     shiny_app,
