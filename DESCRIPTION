@@ -1,6 +1,6 @@
 Package: eposmol
 Title: EPoS-MOL
-Version: 0.9.10
+Version: 1.0.0
 Authors@R: c(
     person("Nils", "Hoffmann", email = "n.hoffmann@fz-juelich.de", role = c("aut", "cre"), comment = c(ORCID = "0000-0002-6540-6875")),
     person("Harald", "Köfeler", email = "harald.koefeler@medunigraz.at", role = c("aut"), comment = c(ORCID = "0000-0002-2725-9616"))

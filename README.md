@@ -7,31 +7,48 @@ While the official shorthand nomenclature of lipids is a first and important ste
 
 EPoS-MoL is an R-package and also provides a Shiny app for the calculation of the EPoS-MoL score.
 
+## Citing EPoS-MoL
+
+Please reference the *Introduction of a Lipidomics Scoring System for data quality assessment* and EPoS-MoL by citing the following publication:
+
+Hoffmann, N. *et al.*, Introduction of a Lipidomics Scoring System for data quality assessment. Journal of Lipid Research, 100817, April 2025, [doi: 10.1016/j.jlr.2025.100817](https://doi.org/10.1016/j.jlr.2025.100817)
+
+## Using EPoS-MoL
+
+A public instance of EPoS-MoL is available at [https://apps.lifs-tools.org/p/app/eposmol](https://apps.lifs-tools.org/p/app/eposmol). 
+The app allows you to upload your lipidomics data in either long or wide format and calculate the EPoS-MoL score. It also contains a sample spreadsheet file containing two examples (long and wide format) that should cover the most common output formats of lipid identification tools, or at least a good approximation thereof. The intention is to have a format that is easy to create and process. The wide format may be easier for manual editing, while the long format may be more suitable for a compact representation and for automated creation by tools.
+
 ## Installing the package
 
 The package can be installed from GitHub using the following command:
 
-```devtools::install_github("lifs-tools/empirical-lipid-ms-score")```
+```
+devtools::install_github("lifs-tools/empirical-lipid-ms-score")
+```
 
 If you want to install a particular release version, use the following command:
 
-```devtools::install_github("lifs-tools/empirical-lipid-ms-score@v0.9.10")```
+```
+devtools::install_github("lifs-tools/empirical-lipid-ms-score@v1.0.0")
+```
 
-in this case for the tag version v0.9.10
+in this case for the tag version v1.0.0
 
 ## Using the package
 
 Please see the package vignette for a detailed description of the package functionality.
 
-```vignette("eposmol", package = "eposmol")```
+```
+vignette("eposmol", package = "eposmol")
+```
 
 **Documentation** is also available at [https://lifs-tools.github.io/empirical-lipid-ms-score/](https://lifs-tools.github.io/empirical-lipid-ms-score/)
 
 ## Accessing the Shiny Webapp
 
-The EpOs-MoL Shiny app can be accessed at the following URL:
+A public version of the EpOs-MoL Shiny app can be accessed at the following URL:
 
-```https://apps.lifs-tools.org/p/app/eposmol```
+https://apps.lifs-tools.org/p/app/eposmol
 
 ## Running the app from RStudio
 
@@ -60,26 +77,40 @@ Listening on http://127.0.0.1:6097
 
 The Docker image can be built using the following command:
 
-```docker build -t eposmol .```
+```
+docker build -t eposmol .
+```
 
 If you use buildx, you will need to instruct the image builder to load the created image into the local docker:
 
-```docker build --load -t eposmol .```
+```
+docker build --load -t eposmol .
+```
 
 ## Running the Docker image
 
 The Docker image can be run using the following command:
 
-```docker run -p 3838:3838 eposmol```
+```
+docker run -p 3838:3838 eposmol
+```
 
 The Shiny app will then be available at http://localhost:3838/eposmol/
 
 Alternatively, you can use the provided compose file to automatically sync local changes during development to the RShiny application. You will need to reload your browser for changes to become effective:
 
-```./run.sh```
+```
+./run.sh
+```
 
 Or use docker compose directly:
 
-```docker compose -f docker-compose-eposmol.yml up --watch```
+```
+docker compose -f docker-compose-eposmol.yml up --watch
+```
 
 The Shiny app will then be available at http://localhost:3838/eposmol/
+
+## License
+
+The code is licensed under the MIT license. See the LICENSE file for details.

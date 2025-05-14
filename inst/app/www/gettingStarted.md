@@ -6,16 +6,18 @@ While the official shorthand nomenclature of lipids is a first and important ste
 
 Furthermore the scoring scheme is integrated with the annotation levels as proposed by the official shorthand nomenclature, with a point score which roughly correlates with the annotated compound details. The merit of such a scoring system is the fact, that it abstracts data quality into a number which gives even the non-lipidomics expert an idea about the reporting quality at first glance. Additionally it could serve as an tool supporting self-control of researchers and for data quality assessment in the peer review process.
 
-If you use EPoS-MoL, please cite the following publication:
-
-** TODO **
-
 More information and support for EPoS-ML is available <a href="https://github.com/lifs-tools/empirical-lipid-ms-score" target="_blank" rel="noreferrer">here on GitHub</a>.
 
 ## EPoS-MoL Webapplication
 
 This web application provides a sample spreadsheet file containing two examples (long and wide format) that should cover the most common output formats of lipid identification tools, or at least a good approximation thereof. The intention is to have a format that is easy to create and process. The wide format may be easier for manual editing, while the long format may be more suitable for a compact representation and for automated creation by tools. 
 You can load the example data by clicking on the 'Load example data' button on the left. Alternatively, you can also download the example to inspect it locally.
+
+## Citing EPoS-MoL
+
+If you use EPoS-MoL, please cite the following publication:
+
+Hoffmann, N. *et al.*, Introduction of a Lipidomics Scoring System for data quality assessment. Journal of Lipid Research, 100817, April 2025, <a href="https://doi.org/10.1016/j.jlr.2025.100817" target="_blank" rel="noreferrer">doi: 10.1016/j.jlr.2025.100817</a>
 
 ## References
 

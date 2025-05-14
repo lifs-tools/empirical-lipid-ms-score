@@ -210,12 +210,12 @@ checkNames <- function(totalLipidScoresTableData, cvMapTable) {
   )
 }
 
-#' Map the lipid category or class to the Eposmol category or class.
+#' Map the lipid category or class to the EPoS-MoL category or class.
 #' @importFrom dplyr filter select pull
 #' @importFrom rlang .data
 #' @param lipidCategoryOrClass The lipid category or class. This can be a category or class from Goslin and/or LIPID MAPS.
 #' @param lipidCategoryAndClassMap The lipid category and class map tibble with columns LipidMapsCategoryOrClass and EposMolCategoryOrClass. By default, we suggest using the class_map.xlsx table in inst/extdata/.
-#' @returns The Eposmol category or class. If 'Unknown', the lipid category or class is not found in the map.
+#' @returns The EPoS-MoL category or class. If 'Unknown', the lipid category or class is not found in the map.
 #' @export
 mapCategoryOrClass <- function(lipidCategoryOrClass, lipidCategoryAndClassMap) {
   eposmolsCategoryOrClass <- lipidCategoryAndClassMap |>

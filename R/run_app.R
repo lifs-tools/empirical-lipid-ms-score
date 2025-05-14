@@ -19,7 +19,7 @@ library(here)
 library(tibble)
 #library(knitr)
 
-#' Start the EPoSMoL Shiny Webapplication.
+#' Start the EPoS-MoL Shiny Webapplication.
 #' @param test.mode enable or disable test.mode
 #' @returns A ShinyApp object.
 #' @export
@@ -558,34 +558,6 @@ run_eposmol_app <- function(test.mode=FALSE) {
       values$totalLipidScoresTableData <- eposmol::checkNames(values$totalLipidScoresTableData, cvMapTable)
     })
 
-    # observeEvent(input$help, {
-    #   mainPanelNames <- c(
-    #     "Getting Started",
-    #     "Total Scores",
-    #     "Individual Scores",
-    #     "Original Table",
-    #     "Reference Score Table",
-    #     "Lipid Category & Class Map",
-    #     "About EPoS-MoL",
-    #     "Getting Started"
-    #   )
-    #   for(panel in mainPanelNames) {
-    #     updateTabsetPanel(session, inputId="mainPanels", selected = panel)
-    #   }
-    #    introjs(session,
-    #            options = list("nextLabel"="Next",
-    #                           "prevLabel"="Back",
-    #                           "skipLabel"="Skip"),
-    #            events = list(
-    #              onbeforechange = readCallback("switchTabs")#,
-    #              # oncomplete=I(
-    #              #   'alert("Thanks for taking the tour!")'
-    #              #   )
-    #              )
-    #    )
-    #   }
-    # )
-
     output$lipidEvidenceScoreTable <- DT::renderDataTable(values$lipidScoresTableData,
       options = list(
         select = "single",
@@ -682,22 +654,6 @@ run_eposmol_app <- function(test.mode=FALSE) {
       escape = FALSE
     )
 
-    # # Save extra values in state$values when we bookmark
-    # onBookmark(function(state) {
-    #   state$values$tble <- values$tble
-    #   state$values$totalLipidScoresTableData <-
-    #     values$totalLipidScoresTableData
-    #   state$values$lipidScoresTableData <- values$lipidScoresTableData
-    # })
-    #
-    # # Read values from state$values when we restore
-    # onRestore(function(state) {
-    #   values <- reactiveValues()
-    #   values$tble <- state$values$tble
-    #   values$totalLipidScoresTableData <-
-    #     state$values$totalLipidScoresTableData
-    #   values$lipidScoresTableData <- state$values$lipidScoresTableData
-    # })
   }
 
   devOptions <- options(
