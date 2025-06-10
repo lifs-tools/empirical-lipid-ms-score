@@ -19,7 +19,7 @@ You can load the example data by clicking on the 'Load example data' button on t
 
 If you use EPoS-MoL, please cite the following publication:
 
-Hoffmann, N. *et al.*, Introduction of a Lipidomics Scoring System for data quality assessment. Journal of Lipid Research, 100817, April 2025, <a href="https://doi.org/10.1016/j.jlr.2025.100817" target="_blank" rel="noreferrer">doi: 10.1016/j.jlr.2025.100817</a>
+N. Hoffmann, R. Ahrends, E.S. Baker, K. Ekroos, X. Han, M. Holčapek, G. Liebisch, M.R. Wenk, Y. Xia and H.C. Köfeler, "Introduction of a Lipidomics Scoring System for data quality assessment," J Lipid Res, 100817, April 2025, <a href="https://doi.org/10.1016/j.jlr.2025.100817" target="_blank" rel="noreferrer">doi: 10.1016/j.jlr.2025.100817</a>
 
 ## References
 
