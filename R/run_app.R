@@ -27,7 +27,7 @@ run_eposmol_app <- function(test.mode=FALSE) {
 
   appInfo <- list(
     "application.name"="EPoS-MoL",
-    "application.version"="0.9.10",
+    "application.version"="1.0.0",
     "application.date"=date(),
     "application.authors"="Nils Hoffmann, Harald Koefeler",
     "application.license"="MIT",
@@ -79,7 +79,6 @@ run_eposmol_app <- function(test.mode=FALSE) {
     shiny::fluidPage(
       shiny::includeCSS(system.file("app/www/custom.css")),
       shinyjs::useShinyjs(),
-      #use_cicerone(),
       shiny::titlePanel("EPoS-MoL Calculation"),
       shiny::sidebarLayout(
         shiny::sidebarPanel(

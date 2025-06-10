@@ -1,12 +1,14 @@
 # Welcome to EPoS-MoL
 
-![EPoS-MoL Logo](eposmol.svg)
+![EPoS-MoL Logo](eposmol.png)
 
 While the official shorthand nomenclature of lipids is a first and important step towards a reporting quality tool, an additional point score reflects the quality of reported data at an even more detailed granularity. Thus, the **E**mpirical **Po**int **S**core **Mo**del for MS-based **L**ipidomics (EPoS-MoL) is a lipidomics scoring scheme which takes into account all the different layers of analytical information to be obtained by mass spectrometry, chromatography and ion mobility spectrometry and awards scoring points for each of them.
 
 Furthermore the scoring scheme is integrated with the annotation levels as proposed by the official shorthand nomenclature, with a point score which roughly correlates with the annotated compound details. The merit of such a scoring system is the fact, that it abstracts data quality into a number which gives even the non-lipidomics expert an idea about the reporting quality at first glance. Additionally it could serve as an tool supporting self-control of researchers and for data quality assessment in the peer review process.
 
-More information and support for EPoS-ML is available <a href="https://github.com/lifs-tools/empirical-lipid-ms-score" target="_blank" rel="noreferrer">here on GitHub</a>.
+Please check the "Using EPoS-MoL" tab for an overview of the input options and a description of the input table formats.
+
+More information and support for EPoS-MoL is available <a href="https://github.com/lifs-tools/empirical-lipid-ms-score" target="_blank" rel="noreferrer">here on GitHub</a>.
 
 ## EPoS-MoL Webapplication
 
