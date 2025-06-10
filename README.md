@@ -77,15 +77,21 @@ Listening on http://127.0.0.1:6097
 
 The Docker image can be built using the following command:
 
-```docker build -t eposmol .```
+```
+docker build -t eposmol .
+```
 
 If you use buildx, you will need to instruct the image builder to load the created image into the local docker:
 
-```docker build --load -t eposmol .```
+```
+docker build --load -t eposmol .
+```
 
 Alternatively, you can use the `build.sh` script:
 
-```bash build.sh```
+```
+bash build.sh
+```
 
 which will run those steps for you using the buildx builder by default.
 This will build and tag the eposmol image as `docker.lifs-tools.org/lifs/eposmol:latest`.
@@ -94,17 +100,23 @@ This will build and tag the eposmol image as `docker.lifs-tools.org/lifs/eposmol
 
 The Docker image can be run using the following command using the tagged image (`eposmol` or `docker.lifs-tools.org/lifs/eposmol:latest`):
 
-```docker run -p 3838:3838 eposmol```
+```
+docker run -p 3838:3838 eposmol
+```
 
 The Shiny app will then be available at http://localhost:3838/eposmol/
 
 Alternatively, you can use the provided compose file to automatically sync local changes during development to the RShiny application. You will need to reload your browser for changes to become effective:
 
-```./run.sh```
+```
+./run.sh
+```
 
 Or use docker compose directly:
 
-```docker compose -f docker-compose-eposmol.yml up --watch```
+```
+docker compose -f docker-compose-eposmol.yml up --watch
+```
 
 The Shiny app will then be available at http://localhost:3838/eposmol/
 
