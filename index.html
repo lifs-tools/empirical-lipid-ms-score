@@ -129,20 +129,23 @@
 <h2 id="building-the-docker-image">Building the Docker image<a class="anchor" aria-label="anchor" href="#building-the-docker-image"></a>
 </h2>
 <p>The Docker image can be built using the following command:</p>
-<pre><code>docker build -t eposmol .</code></pre>
+<p><code>docker build -t eposmol .</code></p>
 <p>If you use buildx, you will need to instruct the image builder to load the created image into the local docker:</p>
-<pre><code>docker build --load -t eposmol .</code></pre>
+<p><code>docker build --load -t eposmol .</code></p>
+<p>Alternatively, you can use the <code>build.sh</code> script:</p>
+<p><code>bash build.sh</code></p>
+<p>which will run those steps for you using the buildx builder by default. This will build and tag the eposmol image as <code>docker.lifs-tools.org/lifs/eposmol:latest</code>.</p>
 </div>
 <div class="section level2">
 <h2 id="running-the-docker-image">Running the Docker image<a class="anchor" aria-label="anchor" href="#running-the-docker-image"></a>
 </h2>
-<p>The Docker image can be run using the following command:</p>
-<pre><code>docker run -p 3838:3838 eposmol</code></pre>
+<p>The Docker image can be run using the following command using the tagged image (<code>eposmol</code> or <code>docker.lifs-tools.org/lifs/eposmol:latest</code>):</p>
+<p><code>docker run -p 3838:3838 eposmol</code></p>
 <p>The Shiny app will then be available at <a href="http://localhost:3838/eposmol/" class="external-link uri">http://localhost:3838/eposmol/</a></p>
 <p>Alternatively, you can use the provided compose file to automatically sync local changes during development to the RShiny application. You will need to reload your browser for changes to become effective:</p>
-<pre><code><span><span class="va">.</span><span class="op">/</span><span class="va">run.sh</span></span></code></pre>
+<p><code>./run.sh</code></p>
 <p>Or use docker compose directly:</p>
-<pre><code>docker compose -f docker-compose-eposmol.yml up --watch</code></pre>
+<p><code>docker compose -f docker-compose-eposmol.yml up --watch</code></p>
 <p>The Shiny app will then be available at <a href="http://localhost:3838/eposmol/" class="external-link uri">http://localhost:3838/eposmol/</a></p>
 </div>
 <div class="section level2">
