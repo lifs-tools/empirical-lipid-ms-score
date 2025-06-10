@@ -1,63 +1,23 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
-  <url>
-    <loc>/404.html</loc>
-  </url>
-  <url>
-    <loc>/LICENSE-text.html</loc>
-  </url>
-  <url>
-    <loc>/LICENSE.html</loc>
-  </url>
-  <url>
-    <loc>/articles/howto-use.html</loc>
-  </url>
-  <url>
-    <loc>/articles/index.html</loc>
-  </url>
-  <url>
-    <loc>/authors.html</loc>
-  </url>
-  <url>
-    <loc>/index.html</loc>
-  </url>
-  <url>
-    <loc>/reference/addRowManually.html</loc>
-  </url>
-  <url>
-    <loc>/reference/calculateTotalLipidScoresTableData.html</loc>
-  </url>
-  <url>
-    <loc>/reference/checkNames.html</loc>
-  </url>
-  <url>
-    <loc>/reference/eposmol.html</loc>
-  </url>
-  <url>
-    <loc>/reference/index.html</loc>
-  </url>
-  <url>
-    <loc>/reference/loadCategoryAndClassMapTable.html</loc>
-  </url>
-  <url>
-    <loc>/reference/loadCvMapTable.html</loc>
-  </url>
-  <url>
-    <loc>/reference/loadScoringTable.html</loc>
-  </url>
-  <url>
-    <loc>/reference/mapCategoryOrClass.html</loc>
-  </url>
-  <url>
-    <loc>/reference/readLongTable.html</loc>
-  </url>
-  <url>
-    <loc>/reference/readManualTable.html</loc>
-  </url>
-  <url>
-    <loc>/reference/readWideTable.html</loc>
-  </url>
-  <url>
-    <loc>/reference/run_eposmol_app.html</loc>
-  </url>
+<urlset xmlns = 'http://www.sitemaps.org/schemas/sitemap/0.9'>
+<url><loc>/404.html</loc></url>
+<url><loc>/LICENSE-text.html</loc></url>
+<url><loc>/LICENSE.html</loc></url>
+<url><loc>/articles/howto-use.html</loc></url>
+<url><loc>/articles/index.html</loc></url>
+<url><loc>/authors.html</loc></url>
+<url><loc>/index.html</loc></url>
+<url><loc>/reference/addRowManually.html</loc></url>
+<url><loc>/reference/calculateTotalLipidScoresTableData.html</loc></url>
+<url><loc>/reference/checkNames.html</loc></url>
+<url><loc>/reference/eposmol.html</loc></url>
+<url><loc>/reference/index.html</loc></url>
+<url><loc>/reference/loadCategoryAndClassMapTable.html</loc></url>
+<url><loc>/reference/loadCvMapTable.html</loc></url>
+<url><loc>/reference/loadScoringTable.html</loc></url>
+<url><loc>/reference/mapCategoryOrClass.html</loc></url>
+<url><loc>/reference/readLongTable.html</loc></url>
+<url><loc>/reference/readManualTable.html</loc></url>
+<url><loc>/reference/readWideTable.html</loc></url>
+<url><loc>/reference/run_eposmol_app.html</loc></url>
 </urlset>
+

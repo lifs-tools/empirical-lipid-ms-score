@@ -19,7 +19,7 @@
 <![endif]-->
 </head>
 <body data-spy="scroll" data-target="#toc">
-    
+
 
     <div class="container template-home">
       <header><div class="navbar navbar-default navbar-fixed-top" role="navigation">
@@ -33,7 +33,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="index.html">eposmol</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.9.10</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">1.0.0</span>
       </span>
     </div>
 
@@ -45,7 +45,7 @@
 <li class="dropdown">
   <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
     Articles
-     
+
     <span class="caret"></span>
   </a>
   <ul class="dropdown-menu" role="menu">
@@ -59,7 +59,7 @@
 <li>
   <a href="https://github.com/lifs-tools/empirical-lipid-ms-score/" class="external-link">
     <span class="fab fa-github fa-lg"></span>
-     
+
   </a>
 </li>
       </ul>
@@ -70,7 +70,7 @@
 </div>
 <!--/.navbar -->
 
-      
+
 
       </header><div class="row">
   <div class="contents col-md-9">
@@ -81,26 +81,37 @@
 <p>While the official shorthand nomenclature of lipids is a first and important step towards a reporting quality tool, an additional point score reflects the quality of reported data at an even more detailed granularity. Thus, the <strong>E</strong>mpirical <strong>Po</strong>int <strong>S</strong>core <strong>Mo</strong>del for MS-based <strong>L</strong>ipidomics (EPoS-MoL) is a lipidomics scoring scheme which takes into account all the different layers of analytical information to be obtained by mass spectrometry, chromatography and ion mobility spectrometry and awards scoring points for each of them.</p>
 <p>EPoS-MoL is an R-package and also provides a Shiny app for the calculation of the EPoS-MoL score.</p>
 <div class="section level2">
+<h2 id="citing-epos-mol">Citing EPoS-MoL<a class="anchor" aria-label="anchor" href="#citing-epos-mol"></a>
+</h2>
+<p>Please reference the <em>Introduction of a Lipidomics Scoring System for data quality assessment</em> and EPoS-MoL by citing the following publication:</p>
+<p>Hoffmann, N. <em>et al.</em>, Introduction of a Lipidomics Scoring System for data quality assessment. Journal of Lipid Research, 100817, April 2025, <a href="https://doi.org/10.1016/j.jlr.2025.100817" class="external-link">doi: 10.1016/j.jlr.2025.100817</a></p>
+</div>
+<div class="section level2">
+<h2 id="using-epos-mol">Using EPoS-MoL<a class="anchor" aria-label="anchor" href="#using-epos-mol"></a>
+</h2>
+<p>A public instance of EPoS-MoL is available at <a href="https://apps.lifs-tools.org/p/app/eposmol" class="external-link">https://apps.lifs-tools.org/p/app/eposmol</a>. The app allows you to upload your lipidomics data in either long or wide format and calculate the EPoS-MoL score. It also contains a sample spreadsheet file containing two examples (long and wide format) that should cover the most common output formats of lipid identification tools, or at least a good approximation thereof. The intention is to have a format that is easy to create and process. The wide format may be easier for manual editing, while the long format may be more suitable for a compact representation and for automated creation by tools.</p>
+</div>
+<div class="section level2">
 <h2 id="installing-the-package">Installing the package<a class="anchor" aria-label="anchor" href="#installing-the-package"></a>
 </h2>
 <p>The package can be installed from GitHub using the following command:</p>
-<p><code>devtools::install_github("lifs-tools/empirical-lipid-ms-score")</code></p>
+<pre><code><span><span class="fu">devtools</span><span class="fu">::</span><span class="fu"><a href="https://remotes.r-lib.org/reference/install_github.html" class="external-link">install_github</a></span><span class="op">(</span><span class="st">"lifs-tools/empirical-lipid-ms-score"</span><span class="op">)</span></span></code></pre>
 <p>If you want to install a particular release version, use the following command:</p>
-<p><code>devtools::install_github("lifs-tools/empirical-lipid-ms-score@v0.9.10")</code></p>
-<p>in this case for the tag version v0.9.10</p>
+<pre><code><span><span class="fu">devtools</span><span class="fu">::</span><span class="fu"><a href="https://remotes.r-lib.org/reference/install_github.html" class="external-link">install_github</a></span><span class="op">(</span><span class="st">"lifs-tools/empirical-lipid-ms-score@v1.0.0"</span><span class="op">)</span></span></code></pre>
+<p>in this case for the tag version v1.0.0</p>
 </div>
 <div class="section level2">
 <h2 id="using-the-package">Using the package<a class="anchor" aria-label="anchor" href="#using-the-package"></a>
 </h2>
 <p>Please see the package vignette for a detailed description of the package functionality.</p>
-<p><code>vignette("eposmol", package = "eposmol")</code></p>
+<pre><code><span><span class="fu"><a href="https://rdrr.io/r/utils/vignette.html" class="external-link">vignette</a></span><span class="op">(</span><span class="st">"eposmol"</span>, package <span class="op">=</span> <span class="st">"eposmol"</span><span class="op">)</span></span></code></pre>
 <p><strong>Documentation</strong> is also available at <a href="https://lifs-tools.github.io/empirical-lipid-ms-score/" class="external-link">https://lifs-tools.github.io/empirical-lipid-ms-score/</a></p>
 </div>
 <div class="section level2">
 <h2 id="accessing-the-shiny-webapp">Accessing the Shiny Webapp<a class="anchor" aria-label="anchor" href="#accessing-the-shiny-webapp"></a>
 </h2>
-<p>The EpOs-MoL Shiny app can be accessed at the following URL:</p>
-<p><code>https://apps.lifs-tools.org/p/app/eposmol</code></p>
+<p>A public version of the EpOs-MoL Shiny app can be accessed at the following URL:</p>
+<p><a href="https://apps.lifs-tools.org/p/app/eposmol" class="external-link uri">https://apps.lifs-tools.org/p/app/eposmol</a></p>
 </div>
 <div class="section level2">
 <h2 id="running-the-app-from-rstudio">Running the app from RStudio<a class="anchor" aria-label="anchor" href="#running-the-app-from-rstudio"></a>
@@ -118,21 +129,26 @@
 <h2 id="building-the-docker-image">Building the Docker image<a class="anchor" aria-label="anchor" href="#building-the-docker-image"></a>
 </h2>
 <p>The Docker image can be built using the following command:</p>
-<p><code>docker build -t eposmol .</code></p>
+<pre><code>docker build -t eposmol .</code></pre>
 <p>If you use buildx, you will need to instruct the image builder to load the created image into the local docker:</p>
-<p><code>docker build --load -t eposmol .</code></p>
+<pre><code>docker build --load -t eposmol .</code></pre>
 </div>
 <div class="section level2">
 <h2 id="running-the-docker-image">Running the Docker image<a class="anchor" aria-label="anchor" href="#running-the-docker-image"></a>
 </h2>
 <p>The Docker image can be run using the following command:</p>
-<p><code>docker run -p 3838:3838 eposmol</code></p>
+<pre><code>docker run -p 3838:3838 eposmol</code></pre>
 <p>The Shiny app will then be available at <a href="http://localhost:3838/eposmol/" class="external-link uri">http://localhost:3838/eposmol/</a></p>
 <p>Alternatively, you can use the provided compose file to automatically sync local changes during development to the RShiny application. You will need to reload your browser for changes to become effective:</p>
-<p><code>./run.sh</code></p>
+<pre><code><span><span class="va">.</span><span class="op">/</span><span class="va">run.sh</span></span></code></pre>
 <p>Or use docker compose directly:</p>
-<p><code>docker compose -f docker-compose-eposmol.yml up --watch</code></p>
+<pre><code>docker compose -f docker-compose-eposmol.yml up --watch</code></pre>
 <p>The Shiny app will then be available at <a href="http://localhost:3838/eposmol/" class="external-link uri">http://localhost:3838/eposmol/</a></p>
+</div>
+<div class="section level2">
+<h2 id="license">License<a class="anchor" aria-label="anchor" href="#license"></a>
+</h2>
+<p>The code is licensed under the MIT license. See the LICENSE file for details.</p>
 </div>
 </div>
   </div>
@@ -165,8 +181,8 @@
 <div class="developers">
 <h2 data-toc-skip>Developers</h2>
 <ul class="list-unstyled">
-<li>Nils Hoffmann <br><small class="roles"> Author, maintainer </small> <a href="https://orcid.org/0000-0002-6540-6875" target="orcid.widget" aria-label="ORCID" class="external-link"><span class="fab fa-orcid orcid" aria-hidden="true"></span></a> </li>
-<li>Harald Köfeler <br><small class="roles"> Author </small> <a href="https://orcid.org/0000-0002-2725-9616" target="orcid.widget" aria-label="ORCID" class="external-link"><span class="fab fa-orcid orcid" aria-hidden="true"></span></a> </li>
+<li>Nils Hoffmann <br><small class="roles"> Author, maintainer </small> <a href="https://orcid.org/0000-0002-6540-6875" target="orcid.widget" aria-label="ORCID" class="external-link"><span class="fab fa-orcid orcid" aria-hidden="true"></span></a>  </li>
+<li>Harald Köfeler <br><small class="roles"> Author </small> <a href="https://orcid.org/0000-0002-2725-9616" target="orcid.widget" aria-label="ORCID" class="external-link"><span class="fab fa-orcid orcid" aria-hidden="true"></span></a>  </li>
 </ul>
 </div>
 
@@ -183,16 +199,16 @@
 
 <div class="pkgdown">
   <p></p>
-<p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.9.</p>
+<p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.1.3.</p>
 </div>
 
       </footer>
 </div>
 
-  
 
 
-  
+
+
 
   </body>
 </html>
